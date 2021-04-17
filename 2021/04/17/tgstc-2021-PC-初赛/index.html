@@ -20,30 +20,39 @@
     var CONFIG = {"hostname":"ihopenot.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="is the random motion of particles suspended in a medium">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Ihopenot">
-<meta property="og:url" content="https://ihopenot.github.io/index.html">
+  <meta name="description" content="分析​    18年的原题。。。  ​    题目本身就是opengl的例程改的，基本函数都能对的上。 ​    推测是在箭头指向的地方能看到flag，但是视角限制传不过去。 ​    发现视角限制是在mousecallback中实现的，去掉即可。  ​    但是转过去发现是屎，估计角度不对，交叉引用找到镜头坐标     ​    直接挂ce移动镜头。 ​    看到flag ​">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tgstc-2021-PC-初赛">
+<meta property="og:url" content="https://ihopenot.github.io/2021/04/17/tgstc-2021-PC-%E5%88%9D%E8%B5%9B/index.html">
 <meta property="og:site_name" content="Ihopenot">
-<meta property="og:description" content="is the random motion of particles suspended in a medium">
+<meta property="og:description" content="分析​    18年的原题。。。  ​    题目本身就是opengl的例程改的，基本函数都能对的上。 ​    推测是在箭头指向的地方能看到flag，但是视角限制传不过去。 ​    发现视角限制是在mousecallback中实现的，去掉即可。  ​    但是转过去发现是屎，估计角度不对，交叉引用找到镜头坐标     ​    直接挂ce移动镜头。 ​    看到flag ​">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ihopenot.github.io/image-20210417181255897.png">
+<meta property="og:image" content="https://ihopenot.github.io/image-20210417181459415.png">
+<meta property="og:image" content="https://ihopenot.github.io/image-20210417181600131.png">
+<meta property="og:image" content="https://ihopenot.github.io/image-20210417181625664.png">
+<meta property="og:image" content="https://ihopenot.github.io/image-20210417181634119.png">
+<meta property="article:published_time" content="2021-04-17T10:09:50.000Z">
+<meta property="article:modified_time" content="2021-04-17T10:16:53.981Z">
 <meta property="article:author" content="Ihopenot">
+<meta property="article:tag" content="逆向">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ihopenot.github.io/image-20210417181255897.png">
 
-<link rel="canonical" href="https://ihopenot.github.io/">
+<link rel="canonical" href="https://ihopenot.github.io/2021/04/17/tgstc-2021-PC-%E5%88%9D%E8%B5%9B/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Ihopenot</title>
+  <title>tgstc-2021-PC-初赛 | Ihopenot</title>
   
 
 
@@ -142,94 +151,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://ihopenot.github.io/2021/04/17/tgstc-2021-PC-%E5%A4%8D%E8%B5%9B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Ihopenot">
-      <meta itemprop="description" content="is the random motion of particles suspended in a medium">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ihopenot">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/17/tgstc-2021-PC-%E5%A4%8D%E8%B5%9B/" class="post-title-link" itemprop="url">tgstc-2021-PC-复赛</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-04-17 18:17:45 / Modified: 20:34:08" itemprop="dateCreated datePublished" datetime="2021-04-17T18:17:45+08:00">2021-04-17</time>
-            </span>
-
-          
-
-        </div>
-      </header>
 
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>​    flag很简单，程序从hack.dat中读取内容解密。</p>
-<p>​    要求解密后对应位置拼起来是ShooterClient.exe。</p>
-<p>​    解密方法就是简单的异或解密。</p>
-<p>​    做到这里hack.exe已经可以工作了，进一步的，程序将解密出来的字符串和2RSRhrofoWtLeLrJCSlTireznrtx.oeLxuehyyAwbpCOZq0tsS7MZyVdOUoE8比较。</p>
-<p>​    求解过程：</p>
-<p><img src="/image-20210417201634008.png" alt="image-20210417201634008"></p>
-<p>​    其中 t 就是hack.dat中应有的数据。写入之后运行就得到了flag</p>
-<p>flag:2RSRhrofoWtLeLrJCSlTireznrtx.oeLxuehyyAwbpCOZq0tsS7MZyVdOUoE8</p>
-<p>​    之后要求分析hack.exe的实现方法。</p>
-<p>​    跟了一下发现hack.exe中实现了一个PEloader，将内存中的一份dll，暂且命名为hack.dll写入了目标进程并且跳转到EP执行。</p>
-<p>​    dump出来hack.dll分析，关键部分是钩了一个类似tick函数的东西，每次暴力从world中取出actor列表，之后匹配字符串来判断是不是角色actor。</p>
-<p><img src="/image-20210417202151693.png" alt="image-20210417202151693"></p>
-<p>​    然后每次函数调用时会检测右键是否按下，如果按下，就寻找一定视角范围内的角色actor，将视角直接写过去。</p>
-<p><img src="/image-20210417202334871.png" alt="image-20210417202334871"></p>
-<p>​    hack.dll分析就差不多了。</p>
-<p>​    回过头看游戏程序本身，是ue4写的，而且就是ue4的一个射击游戏demo，这很好，立刻下载源码。</p>
-<p>​    既然题目要求说了不能用相同的方法实现，那么就不从world结构体去枚举actor获取敌人坐标，而是维护一个存活列表，列表中的元素由构造函数添加，并且由onDeath函数删除。然后钩取Camera的update函数，在每次刷新时检测是否处于targeting的状态，如果存在就自瞄，自瞄的逻辑和hack.exe中是相同的。</p>
-<p>​    具体钩取函数如下：</p>
-<p>（构造函数）</p>
-<p><img src="/image-20210417202926945.png" alt="image-20210417202926945"></p>
-<p>（onDeath函数）</p>
-<p><img src="/image-20210417203051066.png" alt="image-20210417203051066"></p>
-<p>（updateCamera）</p>
-<p><img src="/image-20210417203145996.png" alt="image-20210417203145996"></p>
-<p>​    具体函数如何找到偏移就根据字符串信息和ce中寻找的地址交叉引用寻找。</p>
-<p>​    注意的是退出到主界面是要把列表清空。</p>
-<p>​    总的来说实现有点复杂了。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
@@ -245,10 +170,9 @@
       <meta itemprop="name" content="Ihopenot">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/17/tgstc-2021-PC-%E5%88%9D%E8%B5%9B/" class="post-title-link" itemprop="url">tgstc-2021-PC-初赛</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          tgstc-2021-PC-初赛
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -272,7 +196,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>​    18年的原题。。。</p>
+        <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>​    18年的原题。。。</p>
 <p><img src="/image-20210417181255897.png" alt="image-20210417181255897"></p>
 <p>​    题目本身就是opengl的例程改的，基本函数都能对的上。</p>
 <p>​    推测是在箭头指向的地方能看到flag，但是视角限制传不过去。</p>
@@ -284,21 +208,33 @@
 <p>​    <img src="/image-20210417181625664.png" alt="image-20210417181625664"></p>
 <p><img src="/image-20210417181634119.png" alt="image-20210417181634119"></p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91/" rel="tag"># 逆向</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/04/17/tgstc-2021-PC-%E5%A4%8D%E8%B5%9B/" rel="next" title="tgstc-2021-PC-复赛">
+      tgstc-2021-PC-复赛 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
@@ -351,6 +287,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">分析</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
