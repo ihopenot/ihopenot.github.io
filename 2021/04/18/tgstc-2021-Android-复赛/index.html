@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"ihopenot.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="分析寻找游戏逻辑代码​    上手发现是个unity游戏，首先找Assembly-Csharp.dll，没有，是个il2cpp打包了的游戏。那就找il2cpp.dll和global-metadata。找到了，但是都被加密了。 ​    那么现在要做的有il2cpp.dll的解密和global-metadata的解密。 ​    il2cpp.dll解密估计在libsec2021里，当然也可以直接d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tgstc-2021-Android-复赛">
+<meta property="og:url" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/index.html">
+<meta property="og:site_name" content="Ihopenot">
+<meta property="og:description" content="分析寻找游戏逻辑代码​    上手发现是个unity游戏，首先找Assembly-Csharp.dll，没有，是个il2cpp打包了的游戏。那就找il2cpp.dll和global-metadata。找到了，但是都被加密了。 ​    那么现在要做的有il2cpp.dll的解密和global-metadata的解密。 ​    il2cpp.dll解密估计在libsec2021里，当然也可以直接d">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418113812036.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418113936238.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418115606025.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418115720432.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418120014139.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418120251841.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418120555605.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121226886.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121246747.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121305171.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121337792.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121510954.png">
+<meta property="article:published_time" content="2021-04-18T03:24:34.000Z">
+<meta property="article:modified_time" content="2021-04-18T04:15:36.660Z">
+<meta property="article:author" content="Ihopenot">
+<meta property="article:tag" content="逆向">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418113812036.png">
+
+<link rel="canonical" href="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>tgstc-2021-Android-复赛 | Ihopenot</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Ihopenot</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Brownian motion</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ihopenot">
+      <meta itemprop="description" content="is the random motion of particles suspended in a medium">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ihopenot">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          tgstc-2021-Android-复赛
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-04-18 11:24:34 / Modified: 12:15:36" itemprop="dateCreated datePublished" datetime="2021-04-18T11:24:34+08:00">2021-04-18</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><h3 id="寻找游戏逻辑代码"><a href="#寻找游戏逻辑代码" class="headerlink" title="寻找游戏逻辑代码"></a>寻找游戏逻辑代码</h3><p>​    上手发现是个unity游戏，首先找Assembly-Csharp.dll，没有，是个il2cpp打包了的游戏。那就找il2cpp.dll和global-metadata。找到了，但是都被加密了。</p>
+<p>​    那么现在要做的有il2cpp.dll的解密和global-metadata的解密。</p>
+<p>​    il2cpp.dll解密估计在libsec2021里，当然也可以直接dump，global-metadata可以动调断在il2cpp里跟或者直接GG搜内存dump。</p>
+<h3 id="去除反调试"><a href="#去除反调试" class="headerlink" title="去除反调试"></a>去除反调试</h3><p>​    考虑到之后还要修改，去除反调试应该是难以避免的。</p>
+<p>​    打开就看到和初赛一样一样的字符串加解密算法，但是全部内联到了程序里面。</p>
+<p><img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418113812036.png" alt="image-20210418113812036"></p>
+<p>​    之前的方法不太好处理，也懒得分析它的算法，暂时先不管。</p>
+<p>​    打开调试器启动，准备找下它的反调试的核心函数，发现自杀的代码基本长一个样。</p>
+<p>​    <img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418113936238.png" alt="image-20210418113936238"></p>
+<p>​    通过异或产生一个不合法地址然后跳过去。可以用IDApython批量下断。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_maybe_bad</span>(<span class="params">start, end</span>):</span></span><br><span class="line">    inst = start</span><br><span class="line">    <span class="keyword">while</span> inst &lt; end:</span><br><span class="line">        <span class="keyword">if</span> GetDisasm(inst).startswith(<span class="string">&quot;EOR&quot;</span>):</span><br><span class="line">            <span class="keyword">if</span> GetDisasm(next_head(inst)).startswith(<span class="string">&quot;BLX&quot;</span>):</span><br><span class="line">                bpaddr = next_head(inst)</span><br><span class="line">                add_bpt(bpaddr)</span><br><span class="line">                ida_dbg.disable_bpt(bpaddr)</span><br><span class="line">        inst = next_head(inst)</span><br></pre></td></tr></table></figure>
+
+<p>​    可以断下来接近60个地方。。。看了下反调会影响函数流程，也不敢轻易乱改，只能让它跑起来再把撞上的断点一个个手动修了，肉眼看到的有检测ida和frida的文件和端口，手动过一下这些反调可以让你在程序里少patch几个地方。。。</p>
+<p>​    最后只需要手动改不到10个地方就可以绕过反调了。</p>
+<p>​    其实更应该去找上层一点反调试代码，比如启动反调试线程的地方，但是程序本身大量混淆非常难看，找起来很麻烦。</p>
+<p>​    混淆类似ollvm的那种，感觉要去的话angr也挺好去的，符号执行到块结尾看BLX到哪里去，分支代码特征也很明显，都是ADDNE, MOVEQ这类的指令（口胡。</p>
+<h3 id="解密libunity和libil2cpp"><a href="#解密libunity和libil2cpp" class="headerlink" title="解密libunity和libil2cpp"></a>解密libunity和libil2cpp</h3><p>​    有了上面的工作理论上已经可以调试了，但是实际上跑起来会死在libunity里面，而且跟过去也发现全是乱的，估计是libsec2021中用了校验码之类的东西去解密libunity.so，因为我们的patch导致解密失败，解出来的东西自然全是屎。</p>
+<p>​    手动跟下libunity的init_proc，发现最终解密函数也是在libsec2021中。</p>
+<p>​    而且发现这个地方很可疑。</p>
+<p><img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418115606025.png" alt="image-20210418115606025"></p>
+<p>​    其中用到的值被放在堆里，其指针放在</p>
+<p><img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418115720432.png" alt="image-20210418115720432"></p>
+<p>​    怀疑是key，直接GG挂上去看正常运行时的值，手动填进去试试，发现跑起来了。</p>
+<p>​    解密程序其中取出了2个dword，但只使用了它们的异或值，所以这样patch程序也没问题：</p>
+<p><img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418120014139.png" alt="image-20210418120014139"></p>
+<p>​    </p>
+<p>​    好了，到这一步已经可以畅通无阻调试了。</p>
+<h3 id="恢复global-metadata"><a href="#恢复global-metadata" class="headerlink" title="恢复global-metadata"></a>恢复global-metadata</h3><p>​    直接从内存中dump出来il2cpp.dll。global-metadata在il2cpp.so中下断后dump出来，断在下图第一个函数：</p>
+<p><img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418120251841.png" alt="image-20210418120251841"></p>
+<p>​    丢到il2cppDumper，报错了，也算意料之中。</p>
+<p>​    找原因东找找西找找，最后对着源码看了下后面</p>
+<p><img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418120555605.png" alt="image-20210418120555605"></p>
+<p>​    偏移对不上，错位了。然后对着源码一个区段一个区段看，最后发现是把开头的3个string相关的区段挪到了中间去，所以其他区段全错位了，而且字符串区段还被加密了，加密就是个异或。</p>
+<p><img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121226886.png" alt="image-20210418121226886"></p>
+<p>​    写个python脚本手动修了下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">opart = []</span><br><span class="line">part = [<span class="number">0</span>]</span><br><span class="line">head = <span class="string">b&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dec</span>(<span class="params">buf</span>):</span></span><br><span class="line">	ret = <span class="string">b&#x27;&#x27;</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(buf)):</span><br><span class="line">		<span class="keyword">if</span> buf[i] == <span class="number">0</span>:</span><br><span class="line">			ret += <span class="string">b&#x27;\x00&#x27;</span></span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		v = (i&amp;<span class="number">0x7f</span>) ^ (buf[i] - <span class="number">0x7f</span>) ^ <span class="number">0x5c</span></span><br><span class="line">		ret += <span class="built_in">bytes</span>([v])</span><br><span class="line">	<span class="keyword">return</span> ret</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;gmdata&quot;</span>, <span class="string">&quot;rb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">	raw = f.read()</span><br><span class="line">	head = raw[:<span class="number">8</span>]</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">33</span>):</span><br><span class="line">		offset = u32(raw[i*<span class="number">8</span>+<span class="number">8</span>: i*<span class="number">8</span>+<span class="number">12</span>])</span><br><span class="line">		count = u32(raw[i*<span class="number">8</span>+<span class="number">12</span>: i*<span class="number">8</span>+<span class="number">16</span>])</span><br><span class="line">		part.append(raw[offset: offset+count])</span><br><span class="line"></span><br><span class="line">opart.append(part[<span class="number">23</span>])</span><br><span class="line">opart.append(part[<span class="number">24</span>])</span><br><span class="line">opart.append(dec(part[<span class="number">25</span>]))</span><br><span class="line">opart = opart + part[<span class="number">1</span>:<span class="number">23</span>] + part[<span class="number">26</span>:]</span><br><span class="line"></span><br><span class="line">nowoff = <span class="number">0x110</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> opart:</span><br><span class="line">	<span class="built_in">print</span>(<span class="built_in">type</span>(i))</span><br><span class="line">	head += p32(nowoff)</span><br><span class="line">	head += p32(<span class="built_in">len</span>(i))</span><br><span class="line">	nowoff += <span class="built_in">len</span>(i)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> opart:</span><br><span class="line">	head += i</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;fixMeta&quot;</span>, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">	f.write(head)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>​    修复出来还是报错，手动跟il2cppDumper的源码调试，发现它有个区段认错了，怀疑是版本号有问题，因为这个区段在版本27中是没有的，手动把版本号改成24，成功dump出Assembly-Csharp.dll文件。</p>
+<h3 id="修改无敌版"><a href="#修改无敌版" class="headerlink" title="修改无敌版"></a>修改无敌版</h3><p>​    剩下的工作就很简单了，用ida脚本恢复出来符号信息，找到关键函数。</p>
+<p><img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121246747.png" alt="image-20210418121246747"></p>
+<p>​    判断是否障碍物</p>
+<p><img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121305171.png" alt="image-20210418121305171"></p>
+<p><img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121337792.png" alt="image-20210418121337792"></p>
+<p>​    因为没有分析加解密具体算法，所以这里使用自修改的patch，修改libsec2021中的解密代码，让它解密结束之后将将对应位置改掉。</p>
+<p><img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121510954.png" alt="image-20210418121510954"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91/" rel="tag"># 逆向</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/18/tgstc-2021-Android-%E5%88%9D%E8%B5%9B/" rel="prev" title="tgstc-2021-Android-初赛">
+      <i class="fa fa-chevron-left"></i> tgstc-2021-Android-初赛
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/05/14/%E6%B4%A5%E9%97%A8%E6%9D%AF2021%E5%88%9D%E8%B5%9Bwp/" rel="next" title="津门杯2021初赛wp">
+      津门杯2021初赛wp <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BB%E6%89%BE%E6%B8%B8%E6%88%8F%E9%80%BB%E8%BE%91%E4%BB%A3%E7%A0%81"><span class="nav-number">1.1.</span> <span class="nav-text">寻找游戏逻辑代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%BB%E9%99%A4%E5%8F%8D%E8%B0%83%E8%AF%95"><span class="nav-number">1.2.</span> <span class="nav-text">去除反调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%AF%86libunity%E5%92%8Clibil2cpp"><span class="nav-number">1.3.</span> <span class="nav-text">解密libunity和libil2cpp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%81%A2%E5%A4%8Dglobal-metadata"><span class="nav-number">1.4.</span> <span class="nav-text">恢复global-metadata</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%97%A0%E6%95%8C%E7%89%88"><span class="nav-number">1.5.</span> <span class="nav-text">修改无敌版</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ihopenot</p>
+  <div class="site-description" itemprop="description">is the random motion of particles suspended in a medium</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ihopenot</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
