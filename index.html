@@ -153,6 +153,282 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ihopenot.github.io/2021/06/16/Idapython%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ihopenot">
+      <meta itemprop="description" content="is the random motion of particles suspended in a medium">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ihopenot">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/06/16/Idapython%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="post-title-link" itemprop="url">Idapython常用命令</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-06-16 15:24:36" itemprop="dateCreated datePublished" datetime="2021-06-16T15:24:36+08:00">2021-06-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-06-17 21:24:01" itemprop="dateModified" datetime="2021-06-17T21:24:01+08:00">2021-06-17</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>idapython几乎所有api都有注解，在 path/to/your/ida/python/2(3)/ 里面，这里只是做个快速索引。</p>
+<h2 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h2><h3 id="ida-bytes-bin-search"><a href="#ida-bytes-bin-search" class="headerlink" title="ida_bytes.bin_search"></a>ida_bytes.bin_search</h3><blockquote>
+<p>​    bin_search(start_ea, end_ea, image, imask, step, flags) -&gt; ea_t<br>​    Search for a set of bytes in the program<br>​<br>​    @param start_ea: linear address, start of range to search<br>​    @param end_ea: linear address, end of range to search (exclusive)<br>​    @param image: the set of bytes to search for<br>​    @param imask: a bitfield representing the mask in ‘image’ (can be None)<br>​    @param step: either BIN_SEARCH_FORWARD, or BIN_SEARCH_BACKWARD<br>​    @param flags: combination of BIN_SEARCH_* flags<br>​    @return: the address of a match, or ida_idaapi.BADADDR if not found</p>
+</blockquote>
+<blockquote>
+<p>BIN_SEARCH_CASE = _ida_bytes.BIN_SEARCH_CASE<br>“””<br>case sensitive<br>“””</p>
+<p>BIN_SEARCH_NOCASE = _ida_bytes.BIN_SEARCH_NOCASE<br>“””<br>case insensitive<br>“””</p>
+<p>BIN_SEARCH_NOBREAK = _ida_bytes.BIN_SEARCH_NOBREAK<br>“””<br>don’t check for Ctrl-Break<br>“””</p>
+<p>BIN_SEARCH_INITED = _ida_bytes.BIN_SEARCH_INITED<br>“””<br>find_byte, find_byter: any initilized value<br>“””</p>
+<p>BIN_SEARCH_NOSHOW = _ida_bytes.BIN_SEARCH_NOSHOW<br>“””<br>don’t show search progress or update screen<br>“””</p>
+<p>BIN_SEARCH_FORWARD = _ida_bytes.BIN_SEARCH_FORWARD<br>“””<br>search forward for bytes<br>“””</p>
+<p>BIN_SEARCH_BACKWARD = _ida_bytes.BIN_SEARCH_BACKWARD<br>“””<br>search backward for bytes<br>“””</p>
+</blockquote>
+<h2 id="Enum"><a href="#Enum" class="headerlink" title="Enum"></a>Enum</h2><h3 id="idaapi-add-enum"><a href="#idaapi-add-enum" class="headerlink" title="idaapi.add_enum"></a>idaapi.add_enum</h3><blockquote>
+<p>​    Add new enum type.if idx== ‘BADADDR’ then add as the last idxif<br>​    name==NULL then generate a unique name “enum_%d”<br>​<br>​    add_enum(idx, name, flag) -&gt; enum_t<br>​        @param idx (C++: size_t)<br>​        @param name (C++: const char *)<br>​        @param flag (C++: flags_t)</p>
+</blockquote>
+<blockquote>
+<p>idx - serial number of the new enum. If another enum with the same serial number exists, then all enums with serial numbers &gt;= the specified idx get their serial numbers incremented (in other words, the new enum is put in the middle of the list of enums).<br>If idx &gt;= get_enum_qty() or idx == idaapi.BADNODE then the new enum is created at the end of the list of enums.</p>
+</blockquote>
+<blockquote>
+<p>name - name of the enum.</p>
+</blockquote>
+<blockquote>
+<p>flag - flags for representation of numeric constants in the definition of enum.</p>
+<p>不知道干啥的，好像没啥影响</p>
+</blockquote>
+<h3 id="idaapi-add-enum-member"><a href="#idaapi-add-enum-member" class="headerlink" title="idaapi.add_enum_member"></a>idaapi.add_enum_member</h3><blockquote>
+<p>Add member to enum type.</p>
+<p>add_enum_member(id, name, value, bmask=(bmask_t(-1))) -&gt; int<br>    @param id (C++: enum_t)<br>    @param name (C++: const char *)<br>    @param value (C++: uval_t)<br>    @param bmask (C++: bmask_t)<br>    @return: 0 if ok, otherwise one of  Add enum member result codes</p>
+</blockquote>
+<blockquote>
+<p>id - 可以使用idaapi.get_enum(name)获取</p>
+</blockquote>
+<blockquote>
+<p>bmask - 一般使用 idaapi.DEFMASK</p>
+</blockquote>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><h3 id="idaapi-del-func"><a href="#idaapi-del-func" class="headerlink" title="idaapi.del_func"></a>idaapi.del_func</h3><blockquote>
+<p>Delete a function.</p>
+<p>del_func(ea) -&gt; bool<br>    @param ea: any address in the function entry chunk (C++: ea_t)<br>    @return: success</p>
+</blockquote>
+<h3 id="idaapi-add-func"><a href="#idaapi-add-func" class="headerlink" title="idaapi.add_func"></a>idaapi.add_func</h3><blockquote>
+<p>Add a new function. If the function end address is ‘BADADDR’ , then<br>IDA will try to determine the function bounds by calling<br>find_func_bounds(…, ‘FIND_FUNC_DEFINE’ ).</p>
+<p>add_func(ea1, ea2=BADADDR) -&gt; bool<br>    @param ea1: start address (C++: ea_t)<br>    @param ea2: end address (C++: ea_t)<br>    @return: success</p>
+</blockquote>
+<h3 id="idaapi-create-insn"><a href="#idaapi-create-insn" class="headerlink" title="idaapi.create_insn"></a>idaapi.create_insn</h3><blockquote>
+<p>Create an instruction at the specified address. This function checks<br>if an instruction is present at the specified address and will try to<br>create one if there is none. It will fail if there is a data item or<br>other items hindering the creation of the new instruction. This<br>function will also fill the ‘out’ structure.</p>
+<p>create_insn(ea, out=None) -&gt; int<br>    @param ea: linear address (C++: ea_t)<br>    @param out: the resulting instruction (C++: insn_t  *)<br>    @return: the length of the instruction or 0</p>
+</blockquote>
+<h3 id="idaapi-del-items"><a href="#idaapi-del-items" class="headerlink" title="idaapi.del_items"></a>idaapi.del_items</h3><blockquote>
+<p>Convert item (instruction/data) to unexplored bytes. The whole item<br>(including the head and tail bytes) will be destroyed. It is allowed<br>to pass any address in the item to this function</p>
+<p>del_items(ea, flags=0, nbytes=1, may_destroy=None) -&gt; bool<br>    @param ea: any address within the first item to delete (C++: ea_t)<br>    @param flags: combination of  Unexplored byte conversion flags (C++:<br>                  int)<br>    @param nbytes: number of bytes in the range to be undefined (C++:<br>                   asize_t)<br>    @param may_destroy: optional routine invoked before deleting a head<br>                        item. If callback returns false then item has not<br>                        to be deleted and operation fails (C++:<br>                        may_destroy_cb_t  *)<br>    @return: true on sucessful operation, otherwise false</p>
+</blockquote>
+<h2 id="交叉引用"><a href="#交叉引用" class="headerlink" title="交叉引用"></a>交叉引用</h2><h3 id="idautils-CodeRefsTo"><a href="#idautils-CodeRefsTo" class="headerlink" title="idautils.CodeRefsTo"></a>idautils.CodeRefsTo</h3><h3 id="idautils-CodeRefsFrom"><a href="#idautils-CodeRefsFrom" class="headerlink" title="idautils.CodeRefsFrom"></a>idautils.CodeRefsFrom</h3><blockquote>
+<p>Get a list of code references to(from) ‘ea’</p>
+<p>@param ea:   Target address<br>@param flow: Follow normal code flow or not<br>@type  flow: Boolean (0/1, False/True)</p>
+<p>@return: list of references (may be empty list)</p>
+<p>Example::<br>    for ref in CodeRefsTo(get_screen_ea(), 1):<br>        print(ref)</p>
+</blockquote>
+<h3 id="idautils-DataRefsTo"><a href="#idautils-DataRefsTo" class="headerlink" title="idautils.DataRefsTo"></a>idautils.DataRefsTo</h3><h3 id="idautils-DataRefsFrom"><a href="#idautils-DataRefsFrom" class="headerlink" title="idautils.DataRefsFrom"></a>idautils.DataRefsFrom</h3><blockquote>
+<p>Get a list of data references to(from) ‘ea’</p>
+<p>@param ea:   Target address</p>
+<p>@return: list of references (may be empty list)</p>
+<p>Example::<br>    for ref in DataRefsTo(get_screen_ea()):<br>        print(ref)</p>
+</blockquote>
+<h3 id="idautils-XrefsTo"><a href="#idautils-XrefsTo" class="headerlink" title="idautils.XrefsTo"></a>idautils.XrefsTo</h3><h3 id="idautils-XrefsFrom"><a href="#idautils-XrefsFrom" class="headerlink" title="idautils.XrefsFrom"></a>idautils.XrefsFrom</h3><blockquote>
+<p>Return all references to(from) address ‘ea’</p>
+<p>@param ea: Reference address<br>@param flags: one of ida_xref.XREF_ALL (default), ida_xref.XREF_FAR, ida_xref.XREF_DATA</p>
+<p>Example::<br>       for xref in XrefsTo(here(), 0):<br>           print(xref.type, XrefTypeName(xref.type), <br>                     ‘from’, hex(xref.frm), ‘to’, hex(xref.to))</p>
+</blockquote>
+<h3 id="idautils-XrefsTypeName"><a href="#idautils-XrefsTypeName" class="headerlink" title="idautils.XrefsTypeName"></a>idautils.XrefsTypeName</h3><blockquote>
+<p>Convert cross-reference type codes to readable names</p>
+<p>@param typecode: cross-reference type code</p>
+</blockquote>
+<h2 id="汇编"><a href="#汇编" class="headerlink" title="汇编"></a>汇编</h2><h3 id="idaapi-print-insn-mnem"><a href="#idaapi-print-insn-mnem" class="headerlink" title="idaapi.print_insn_mnem"></a>idaapi.print_insn_mnem</h3><blockquote>
+<p>Print instruction mnemonics.</p>
+<p>print_insn_mnem(ea) -&gt; str<br>    @param ea: linear address of the instruction (C++: ea_t)<br>    @return: success</p>
+</blockquote>
+<p>ea位置如果在ida中是undefined的话会读不出来，它不会去decode而是直接读asm出来。</p>
+<p>像这种<img src="/2021/06/16/Idapython%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/image-20210616202525303.png" alt="image-20210616202525303"></p>
+<h3 id="idc-GetDisasm"><a href="#idc-GetDisasm" class="headerlink" title="idc.GetDisasm"></a>idc.GetDisasm</h3><blockquote>
+<p>Get disassembly line</p>
+<p>@param ea: linear address of instruction</p>
+<p>@return: “” - could not decode instruction at the specified location</p>
+<p>@note: this function may not return exactly the same mnemonics<br>       as you see on the screen.</p>
+</blockquote>
+<p>就是获取ea位置的asm，如果是undefined的话会读出来 db 57h 这种东西，并且会读出来 <strong>;</strong> 后面的注释内容</p>
+<p>像这样<img src="/2021/06/16/Idapython%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/image-20210617153806003.png" alt="image-20210617153806003"></p>
+<h3 id="idaapi-decode-insn"><a href="#idaapi-decode-insn" class="headerlink" title="idaapi.decode_insn"></a>idaapi.decode_insn</h3><blockquote>
+<p>Analyze the specified address and fill ‘out’. This function does not<br>modify the database. It just tries to interpret the specified address<br>as an instruction and fills the ‘out’ structure.</p>
+<p>decode_insn(out, ea) -&gt; int<br>    @param out: the resulting instruction (C++: insn_t  *)<br>    @param ea: linear address (C++: ea_t)<br>    @return: the length of the (possible) instruction or 0</p>
+</blockquote>
+<p>解析ea出的机器码，输出到 out 指向的 insn_t 中，实际使用时 out 参数传入idaapi.insn_t()返回的一个对象，之后再通过这个对象去获取对应位置指令信息</p>
+<p>example：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ins = idaapi.insn_t()</span><br><span class="line">idaapi.decode_insn(ins, <span class="number">0x401000</span>) <span class="comment"># push r15</span></span><br><span class="line">ins.get_canon_mnem() <span class="comment"># return &#x27;push&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="idc-get-operand-type"><a href="#idc-get-operand-type" class="headerlink" title="idc.get_operand_type"></a>idc.get_operand_type</h3><blockquote>
+<p>Get type of instruction operand</p>
+<p>@param ea: linear address of instruction<br>@param n: number of operand:<br>    0 - the first operand<br>    1 - the second operand</p>
+<p>@return: any of o_* constants or -1 on error</p>
+</blockquote>
+<p>o_*定义再 idc 中</p>
+<blockquote>
+<p>o_void     = ida_ua.o_void      # No Operand                           ———-<br>o_reg      = ida_ua.o_reg       # General Register (al,ax,es,ds…)    reg<br>o_mem      = ida_ua.o_mem       # Direct Memory Reference  (DATA)      addr<br>o_phrase   = ida_ua.o_phrase    # Memory Ref [Base Reg + Index Reg]    phrase<br>o_displ    = ida_ua.o_displ     # Memory Reg [Base Reg + Index Reg + Displacement] phrase+addr<br>o_imm      = ida_ua.o_imm       # Immediate Value                      value<br>o_far      = ida_ua.o_far       # Immediate Far Address  (CODE)        addr<br>o_near     = ida_ua.o_near      # Immediate Near Address (CODE)        addr<br>o_idpspec0 = ida_ua.o_idpspec0  # Processor specific type<br>o_idpspec1 = ida_ua.o_idpspec1  # Processor specific type<br>o_idpspec2 = ida_ua.o_idpspec2  # Processor specific type<br>o_idpspec3 = ida_ua.o_idpspec3  # Processor specific type<br>o_idpspec4 = ida_ua.o_idpspec4  # Processor specific type<br>o_idpspec5 = ida_ua.o_idpspec5  # Processor specific type<br>                                                            # There can be more processor specific types</p>
+<p># x86</p>
+<p>o_trreg  =       ida_ua.o_idpspec0      # trace register<br>o_dbreg  =       ida_ua.o_idpspec1      # debug register<br>o_crreg  =       ida_ua.o_idpspec2      # control register<br>o_fpreg  =       ida_ua.o_idpspec3      # floating point register<br>o_mmxreg  =      ida_ua.o_idpspec4      # mmx register<br>o_xmmreg  =      ida_ua.o_idpspec5      # xmm register</p>
+<p># arm</p>
+<p>o_reglist  =     ida_ua.o_idpspec1      # Register list (for LDM/STM)<br>o_creglist  =    ida_ua.o_idpspec2      # Coprocessor register list (for CDP)<br>o_creg  =        ida_ua.o_idpspec3      # Coprocessor register (for LDC/STC)<br>o_fpreglist  =   ida_ua.o_idpspec4      # Floating point register list<br>o_text  =        ida_ua.o_idpspec5      # Arbitrary text stored in the operand<br>o_cond  =        (ida_ua.o_idpspec5+1)  # ARM condition as an operand</p>
+<p># ppc</p>
+<p>o_spr  =         ida_ua.o_idpspec0      # Special purpose register<br>o_twofpr  =      ida_ua.o_idpspec1      # Two FPRs<br>o_shmbme  =      ida_ua.o_idpspec2      # SH &amp; MB &amp; ME<br>o_crf  =         ida_ua.o_idpspec3      # crfield      x.reg<br>o_crb  =         ida_ua.o_idpspec4      # crbit        x.reg<br>o_dcr  =         ida_ua.o_idpspec5      # Device control register</p>
+</blockquote>
+<h3 id="idc-get-operand-value"><a href="#idc-get-operand-value" class="headerlink" title="idc.get_operand_value"></a>idc.get_operand_value</h3><blockquote>
+<p>Get number used in the operand</p>
+<p>This function returns an immediate number used in the operand</p>
+<p>@param ea: linear address of instruction<br>@param n: the operand number</p>
+<p>@return: value<br>    operand is an immediate value  =&gt; immediate value<br>    operand has a displacement     =&gt; displacement<br>    operand is a direct memory ref =&gt; memory address<br>    operand is a register          =&gt; register number<br>    operand is a register phrase   =&gt; phrase number<br>    otherwise                      =&gt; -1</p>
+</blockquote>
+<h3 id="idc-next-head"><a href="#idc-next-head" class="headerlink" title="idc.next_head"></a>idc.next_head</h3><blockquote>
+<p>Get next defined item (instruction or data) in the program</p>
+<p>@param ea: linear address to start search from<br>@param maxea: the search will stop at the address<br>    maxea is not included in the search range</p>
+<p>@return: BADADDR - no (more) defined items</p>
+</blockquote>
+<p>通常用于遍历下一条指令，对应的有prev_head</p>
+<h3 id="idc-print-operand"><a href="#idc-print-operand" class="headerlink" title="idc.print_operand"></a>idc.print_operand</h3><blockquote>
+<p>Get operand of an instruction or data</p>
+<p>@param ea: linear address of the item<br>@param n: number of operand:<br>    0 - the first operand<br>    1 - the second operand</p>
+<p>@return: the current text representation of operand or “”</p>
+</blockquote>
+<h2 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h2><h3 id="idc-get-strlit-contents"><a href="#idc-get-strlit-contents" class="headerlink" title="idc.get_strlit_contents"></a>idc.get_strlit_contents</h3><blockquote>
+<p>get_strlit_contents(ea, length = -1, strtype = STRTYPE_C)</p>
+<p>Get string contents<br>@param ea: linear address<br>@param length: string length. -1 means to calculate the max string length<br>@param strtype: the string type (one of STRTYPE_… constants)</p>
+<p>@return: string contents or empty string</p>
+</blockquote>
+<blockquote>
+<p># Character-terminated string. The termination characters<br># are kept in the next bytes of string type.<br>STRTYPE_TERMCHR   = ida_nalt.STRTYPE_TERMCHR<br># C-style string.<br>STRTYPE_C         = ida_nalt.STRTYPE_C<br># Zero-terminated 16bit chars<br>STRTYPE_C_16      = ida_nalt.STRTYPE_C_16<br># Zero-terminated 32bit chars<br>STRTYPE_C_32      = ida_nalt.STRTYPE_C_32<br># Pascal-style, one-byte length prefix<br>STRTYPE_PASCAL    = ida_nalt.STRTYPE_PASCAL<br># Pascal-style, 16bit chars, one-byte length prefix<br>STRTYPE_PASCAL_16 = ida_nalt.STRTYPE_PASCAL_16<br># Pascal-style, two-byte length prefix<br>STRTYPE_LEN2      = ida_nalt.STRTYPE_LEN2<br># Pascal-style, 16bit chars, two-byte length prefix<br>STRTYPE_LEN2_16   = ida_nalt.STRTYPE_LEN2_16<br># Pascal-style, four-byte length prefix<br>STRTYPE_LEN4      = ida_nalt.STRTYPE_LEN4<br># Pascal-style, 16bit chars, four-byte length prefix<br>STRTYPE_LEN4_16   = ida_nalt.STRTYPE_LEN4_16</p>
+<p># alias<br>STRTYPE_C16       = STRTYPE_C_16</p>
+</blockquote>
+<h3 id="获取指定位置值"><a href="#获取指定位置值" class="headerlink" title="获取指定位置值"></a>获取指定位置值</h3><h4 id="idaapi-get-byte"><a href="#idaapi-get-byte" class="headerlink" title="idaapi.get_byte"></a>idaapi.get_byte</h4><h4 id="idaapi-get-word"><a href="#idaapi-get-word" class="headerlink" title="idaapi.get_word"></a>idaapi.get_word</h4><h4 id="idaapi-get-dword"><a href="#idaapi-get-dword" class="headerlink" title="idaapi.get_dword"></a>idaapi.get_dword</h4><h4 id="idaapi-get-qword"><a href="#idaapi-get-qword" class="headerlink" title="idaapi.get_qword"></a>idaapi.get_qword</h4><blockquote>
+<p>Get one byte (8-bit) of the program at ‘ea’ from the database. Works<br>even if the debugger is active. See also ‘get_dbg_byte()’ to read the<br>process memory directly. This function works only for 8bit byte<br>processors.</p>
+<p>get_db_byte(ea) -&gt; uchar<br>    @param ea (C++: ea_t)</p>
+</blockquote>
+<p>不使用调试过程中的值。</p>
+<h4 id="idc-read-dbg-byte"><a href="#idc-read-dbg-byte" class="headerlink" title="idc.read_dbg_byte"></a>idc.read_dbg_byte</h4><h4 id="idc-read-dbg-word"><a href="#idc-read-dbg-word" class="headerlink" title="idc.read_dbg_word"></a>idc.read_dbg_word</h4><h4 id="idc-read-dbg-dword"><a href="#idc-read-dbg-dword" class="headerlink" title="idc.read_dbg_dword"></a>idc.read_dbg_dword</h4><h4 id="idc-read-dbg-qword"><a href="#idc-read-dbg-qword" class="headerlink" title="idc.read_dbg_qword"></a>idc.read_dbg_qword</h4><blockquote>
+<p>Get value of program byte using the debugger memory</p>
+<p>@param ea: linear address<br>@return: The value or None on failure.</p>
+</blockquote>
+<p>使用调试过程中的值。</p>
+<h3 id="获取指定位置开始的bytes"><a href="#获取指定位置开始的bytes" class="headerlink" title="获取指定位置开始的bytes"></a>获取指定位置开始的bytes</h3><h4 id="idc-get-bytes"><a href="#idc-get-bytes" class="headerlink" title="idc.get_bytes"></a>idc.get_bytes</h4><blockquote>
+<p>get_bytes(ea, size, use_dbg = False)<br>Return the specified number of bytes of the program<br>@param ea: linear address<br>@param size: size of buffer in normal 8-bit bytes<br>@param use_dbg: if True, use debugger memory, otherwise just the database<br>@return: None on failure<br>         otherwise a string containing the read bytes</p>
+</blockquote>
+<h3 id="修改指定位置的值"><a href="#修改指定位置的值" class="headerlink" title="修改指定位置的值"></a>修改指定位置的值</h3><h4 id="idaapi-patch-byte"><a href="#idaapi-patch-byte" class="headerlink" title="idaapi.patch_byte"></a>idaapi.patch_byte</h4><h4 id="idaapi-patch-word"><a href="#idaapi-patch-word" class="headerlink" title="idaapi.patch_word"></a>idaapi.patch_word</h4><h4 id="idaapi-patch-dword"><a href="#idaapi-patch-dword" class="headerlink" title="idaapi.patch_dword"></a>idaapi.patch_dword</h4><h4 id="idaapi-patch-qword"><a href="#idaapi-patch-qword" class="headerlink" title="idaapi.patch_qword"></a>idaapi.patch_qword</h4><blockquote>
+<p>Patch a byte of the program. The original value of the byte is saved<br>and can be obtained by ‘get_original_byte()’ . This function works for<br>wide byte processors too.</p>
+<p>patch_byte(ea, x) -&gt; bool<br>    @param ea (C++: ea_t)<br>    @param x (C++: uint64)<br>    @retval: true - the database has been modified,<br>    @retval: false - the debugger is running and the process’ memory has<br>                     value ‘x’ at address ‘ea’, or the debugger is not<br>                     running, and the IDB has value ‘x’ at address ‘ea<br>                     already.</p>
+</blockquote>
+<h3 id="修改指定位置开始的bytes"><a href="#修改指定位置开始的bytes" class="headerlink" title="修改指定位置开始的bytes"></a>修改指定位置开始的bytes</h3><h4 id="idaapi-patch-bytes"><a href="#idaapi-patch-bytes" class="headerlink" title="idaapi.patch_bytes"></a>idaapi.patch_bytes</h4><blockquote>
+<p>Patch the specified number of bytes of the program. Original values of<br>bytes are saved and are available with get_original…() functions.<br>See also ‘put_bytes()’ .</p>
+<p>patch_bytes(ea, buf)<br>    @param ea: linear address (C++: ea_t)<br>    @param buf: buffer with new values of bytes (C++: const void *)</p>
+</blockquote>
+<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><h3 id="idaapi-add-bpt"><a href="#idaapi-add-bpt" class="headerlink" title="idaapi.add_bpt"></a>idaapi.add_bpt</h3><blockquote>
+<p>Add a new breakpoint in the debugged process. \sq{Type, Synchronous<br>function - available as request, Notification, none (synchronous<br>function)}Only one breakpoint can exist at a given address.</p>
+<p>add_bpt(ea, size=0, type=BPT_DEFAULT) -&gt; bool<br>    @param ea: any address in the process memory space. Depending on the<br>               architecture, hardware breakpoints always be setup at<br>               random address. For example, on x86, hardware breakpoints<br>               should be aligned depending on their size. Moreover, on the<br>               x86 architecture, it is impossible to setup more than 4<br>               hardware breakpoints. (C++: ea_t)<br>    @param size: size of the breakpoint (irrelevant for software<br>                 breakpoints): As for the address, hardware breakpoints<br>                 can’t always be setup with random size. (C++: asize_t)<br>    @param type: type of the breakpoint ( BPT_SOFT  for software<br>                 breakpoint) special case  BPT_DEFAULT  ( BPT_SOFT |<br>                 BPT_EXEC ): try to add instruction breakpoint of the<br>                 appropriate type as follows: software bpt if supported,<br>                 hwbpt otherwise (C++: bpttype_t)</p>
+<p>add_bpt(bpt) -&gt; bool<br>    bpt: bpt_t const &amp;</p>
+</blockquote>
+<blockquote>
+<p>BPT_WRITE = cvar.BPT_WRITE<br>BPT_READ = cvar.BPT_READ<br>BPT_RDWR = cvar.BPT_RDWR<br>BPT_SOFT = cvar.BPT_SOFT<br>BPT_EXEC = cvar.BPT_EXEC<br>BPT_DEFAULT = cvar.BPT_DEFAULT</p>
+</blockquote>
+<h3 id="idaapi-continue-process"><a href="#idaapi-continue-process" class="headerlink" title="idaapi.continue_process"></a>idaapi.continue_process</h3><blockquote>
+<p>idaapi.continue_process()</p>
+<p>Continue the execution of the process in the debugger. \sq{Type,<br>Synchronous function - available as Request, Notification, none<br>(synchronous function)}The ‘continue_process()’ function can be called<br>from a notification handler to force the continuation of the process.<br>In this case the request queue will not be examined, IDA will simply<br>resume execution. Usually it makes sense to call<br>‘request_continue_process()’ followed by ‘run_requests()’ , so that<br>IDA will first start a queued request (if any) and then resume the<br>application.</p>
+</blockquote>
+<h3 id="idaapi-wait-for-next-event"><a href="#idaapi-wait-for-next-event" class="headerlink" title="idaapi.wait_for_next_event"></a>idaapi.wait_for_next_event</h3><blockquote>
+<p>Wait for the next event.This function (optionally) resumes the process<br>execution, and waits for a debugger event until a possible timeout<br>occurs.</p>
+<p>wait_for_next_event(wfne, timeout) -&gt; dbg_event_code_t<br>    @param wfne: combination of  Wait for debugger event flags  constants<br>                 (C++: int)<br>    @param timeout: number of seconds to wait, -1-infinity (C++: int)<br>    @return: either an event_id_t (if &gt; 0), or a dbg_event_code_t (if &lt;=<br>             0)</p>
+</blockquote>
+<blockquote>
+<p>WFNE_ANY = _ida_dbg.WFNE_ANY<br>“””<br>return the first event (even if it doesn’t suspend the process)<br>“””</p>
+<p>WFNE_SUSP = _ida_dbg.WFNE_SUSP<br>“””<br>wait until the process gets suspended<br>“””</p>
+<p>WFNE_SILENT = _ida_dbg.WFNE_SILENT<br>“””<br>1: be slient, 0:display modal boxes if necessary<br>“””</p>
+<p>WFNE_CONT = _ida_dbg.WFNE_CONT<br>“””<br>continue from the suspended state<br>“””</p>
+<p>WFNE_NOWAIT = _ida_dbg.WFNE_NOWAIT<br>“””<br>(to be used with ‘WFNE_CONT’ )</p>
+<p>do not wait for any event, immediately return ‘DEC_TIMEOUT’<br>“””</p>
+<p>WFNE_USEC = _ida_dbg.WFNE_USEC<br>“””<br>(minimum non-zero timeout is 40000us)</p>
+<p>timeout is specified in microseconds<br>“””</p>
+</blockquote>
+<p>如果希望程序运行到下一个断点可以这样写：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># continue process，并且等待下一次suspended</span></span><br><span class="line">idaapi.wait_for_next_event(idaapi.WFNE_SUSP | idaapi.WFNE_CONT, -<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="idc-set-bpt-cond"><a href="#idc-set-bpt-cond" class="headerlink" title="idc.set_bpt_cond"></a>idc.set_bpt_cond</h3><blockquote>
+<p>Set breakpoint condition</p>
+<p>@param ea: any address in the breakpoint range<br>@param cnd: breakpoint condition<br>@param is_lowcnd: 0 - regular condition, 1 - low level condition</p>
+<p>@return: success</p>
+</blockquote>
+<p>可以设置断点为条件断点，并且设置condition，但是无法从这里设置condition的语言，默认是IDC</p>
+<p>目前我还没有找到比较优雅的直接设置python条件断点的方式，只能硬改 bpt_t 中的 elang 来改</p>
+<p>example：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 设置python条件断点</span><br><span class="line">bpt &#x3D; idaapi.get_bpt(ea)</span><br><span class="line">bpt.elang &#x3D; &quot;Python&quot; # or &quot;IDC&quot;</span><br><span class="line">bpt.condition &#x3D; &quot;print(&#39;Hello World&#39;)&quot; # 或者再add_bpt之后使用set_bpt_cond改</span><br><span class="line">idaapi.del_bpt(ea)</span><br><span class="line">idaapi.add_bpt(bpt)</span><br></pre></td></tr></table></figure>
+
+<h2 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h2><h3 id="idaapi-set-cmt"><a href="#idaapi-set-cmt" class="headerlink" title="idaapi.set_cmt"></a>idaapi.set_cmt</h3><blockquote>
+<p>Set an indented comment.</p>
+<p>set_cmt(ea, comm, rptble) -&gt; bool<br>    @param ea: linear address (C++: ea_t)<br>    @param comm: comment string   nullptr: do nothing (return 0)   “” :<br>                 delete comment (C++: const char *)<br>    @param rptble: is repeatable? (C++: bool)<br>    @return: success</p>
+</blockquote>
+<h3 id="idaapi-get-name"><a href="#idaapi-get-name" class="headerlink" title="idaapi.get_name"></a>idaapi.get_name</h3><blockquote>
+<p>get_name(ea) -&gt; qstring<br>    @param ea (C++: ea_t)</p>
+</blockquote>
+<h3 id="idaapi-set-name"><a href="#idaapi-set-name" class="headerlink" title="idaapi.set_name"></a>idaapi.set_name</h3><blockquote>
+<p>Set or delete name of an item at the specified address. An item can be<br>anything: instruction, function, data byte, word, string, structure,<br>etc… Include name into the list of names.</p>
+<p>set_name(ea, name, flags=0) -&gt; bool<br>    @param ea: linear address. do nothing if ea is not valid (return 0).<br>               tail bytes can’t have names. (C++: ea_t)<br>    @param name: new name.   NULL: do nothing (return 0).   “” : delete<br>                 name.   otherwise this is a new name. (C++: const char *)<br>    @param flags: Set name flags . If a bit is not specified, then the<br>                  corresponding action is not performed and the name will<br>                  retain the same bits as before calling this function.<br>                  For new names, default is: non-public, non-weak, non-<br>                  auto. (C++: int)<br>    @retval: 1 - ok, name is changed<br>    @retval: 0 - failure, a warning is displayed</p>
+</blockquote>
+<h3 id="idc-get-name-ea-simple"><a href="#idc-get-name-ea-simple" class="headerlink" title="idc.get_name_ea_simple"></a>idc.get_name_ea_simple</h3><blockquote>
+<p>Get linear address of a name</p>
+<p>@param name: name of program byte</p>
+<p>@return: address of the name<br>         BADADDR - No such name</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://ihopenot.github.io/2021/05/28/%E6%B4%A5%E9%97%A8%E6%9D%AF2021Writeup/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -725,7 +1001,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
