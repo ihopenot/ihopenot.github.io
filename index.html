@@ -153,6 +153,96 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ihopenot.github.io/2022/03/31/dnSpy%E8%B0%83%E8%AF%95Unity%E7%A8%8B%E5%BA%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ihopenot">
+      <meta itemprop="description" content="is the random motion of particles suspended in a medium">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ihopenot">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/31/dnSpy%E8%B0%83%E8%AF%95Unity%E7%A8%8B%E5%BA%8F/" class="post-title-link" itemprop="url">dnSpy调试Unity程序</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-03-31 14:39:43 / Modified: 15:04:06" itemprop="dateCreated datePublished" datetime="2022-03-31T14:39:43+08:00">2022-03-31</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>想日一个东西，发现是个Unity写的程序，而且被混淆过，有点难看。</p>
+<p>想去动调，发现Unity写的东西想调试Assembly-Csharp.dll不能直接用dnSpy起，没法动调，看了下github的仓库，发现仓库已经是Archived的了，很多东西都没了。网上找了下资料很多也语焉不详，这里记录一下怎么用dnSpy去调Unity。</p>
+<h2 id="Patch-Mono"><a href="#Patch-Mono" class="headerlink" title="Patch Mono"></a>Patch Mono</h2><p>用dnSpy去调试Unity需要魔改Mono的代码，详细可以看<a target="_blank" rel="noopener" href="https://github.com/dnSpy/dnSpy-Unity-mono%E8%BF%99%E4%B8%AA%E4%BB%93%E5%BA%93%E3%80%82">https://github.com/dnSpy/dnSpy-Unity-mono这个仓库。</a></p>
+<ol>
+<li><p>首先把mono官方仓库clone下来</p>
+<p><code>git clone https://github.com/Unity-Technologies/mono</code></p>
+</li>
+<li><p>把dnSpy-Unity-mono也clone下来</p>
+<p><code>git clone https://github.com/dnSpy/dnSpy-Unity-mono</code></p>
+</li>
+<li><p>编译umpatcher，这个在dnSpy-Unity-mono/src/umpathcer里，需要使用vs进行编译。（需要安装.Net框架）</p>
+</li>
+<li><p>找到你需要的Mono版本，一般可以从Unity程序的properties里面看到</p>
+<p><img src="/2022/03/31/dnSpy%E8%B0%83%E8%AF%95Unity%E7%A8%8B%E5%BA%8F/image-20220331145246919.png" alt="image-20220331145246919"></p>
+<p>比如这个就是2019.4.37-mbe</p>
+</li>
+<li><p>在mono官方仓库里找到对应tags的最新一个commit，把commitId记下来</p>
+<p><img src="/2022/03/31/dnSpy%E8%B0%83%E8%AF%95Unity%E7%A8%8B%E5%BA%8F/image-20220331145527488.png" alt="image-20220331145527488"></p>
+<p>这里2019.4.37-mbe对应的就是 <code>66f6777a1aa48e3f7455172146303ced039fc2d7</code></p>
+<p>或者也可以按dnSpy-Unity-mono里面说的，到Unity官网下个对应的Setup.exe，解包出来mono.dll看时间戳去找对应commit。</p>
+</li>
+<li><p>在mono仓库里切换到对应的tag，这里就是2019.4.37f1 （不确定是否必需）</p>
+</li>
+<li><p>使用umpatcher进行patch</p>
+<p><code>umpatcher 2019.4.37-mbe 66f6777a1aa48e3f7455172146303ced039fc2d7 &quot;\path\to\Unity-mono&quot; &quot;\path\to\dnSpy-Unity-mono&quot;</code></p>
+<p>如果是MonoBleedingEdge一定要加上-mbe，程序会用这个判断patch模式。</p>
+</li>
+<li><p>在dnSpy-Unity-mono仓库中找到对应的vs项目文件，开始编译，这里就是<code>dnSpy-Unity-mono-v2019.x-V40.sln</code> （需要windowsSDK）</p>
+</li>
+<li><p>把编译好的dll丢到程序对应位置，使用dnSpy开始调试。</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://ihopenot.github.io/2021/06/16/Idapython%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1001,7 +1091,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1033,7 +1123,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
