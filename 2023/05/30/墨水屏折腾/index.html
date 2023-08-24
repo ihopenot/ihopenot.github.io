@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ihopenot.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="前言去年就买了几个墨水屏，本来打算玩的，但是一直抽不出时间（懒）。最近稍微闲下来点，来研究下墨水屏。 一开始捡的闲鱼2.13寸的黑白屏，7块钱一个。但是这个不支持蓝牙，玩了一下又入了一批支持蓝牙的版本，无线刷图还是要舒服一些的。 第一批墨水屏这批墨水屏是Stellar-M型号的，一开始看了很多资料，感觉可搞才入的，但是后来到手才发现屏和主流的Stellar-M不太一样。 拆解和烧录程序参考这篇文章">
+<meta property="og:type" content="article">
+<meta property="og:title" content="墨水屏折腾">
+<meta property="og:url" content="https://ihopenot.github.io/2023/05/30/%E5%A2%A8%E6%B0%B4%E5%B1%8F%E6%8A%98%E8%85%BE/index.html">
+<meta property="og:site_name" content="Ihopenot">
+<meta property="og:description" content="前言去年就买了几个墨水屏，本来打算玩的，但是一直抽不出时间（懒）。最近稍微闲下来点，来研究下墨水屏。 一开始捡的闲鱼2.13寸的黑白屏，7块钱一个。但是这个不支持蓝牙，玩了一下又入了一批支持蓝牙的版本，无线刷图还是要舒服一些的。 第一批墨水屏这批墨水屏是Stellar-M型号的，一开始看了很多资料，感觉可搞才入的，但是后来到手才发现屏和主流的Stellar-M不太一样。 拆解和烧录程序参考这篇文章">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ihopenot.github.io/2023/05/30/%E5%A2%A8%E6%B0%B4%E5%B1%8F%E6%8A%98%E8%85%BE/result1.jpg">
+<meta property="og:image" content="https://ihopenot.github.io/2023/05/30/%E5%A2%A8%E6%B0%B4%E5%B1%8F%E6%8A%98%E8%85%BE/bak2.13.jpg">
+<meta property="og:image" content="https://ihopenot.github.io/2023/05/30/%E5%A2%A8%E6%B0%B4%E5%B1%8F%E6%8A%98%E8%85%BE/lut.png">
+<meta property="og:image" content="https://ihopenot.github.io/2023/05/30/%E5%A2%A8%E6%B0%B4%E5%B1%8F%E6%8A%98%E8%85%BE/bgr.jpg">
+<meta property="og:image" content="https://ihopenot.github.io/2023/05/30/%E5%A2%A8%E6%B0%B4%E5%B1%8F%E6%8A%98%E8%85%BE/gray.jpg">
+<meta property="article:published_time" content="2023-05-30T08:24:01.000Z">
+<meta property="article:modified_time" content="2023-08-24T14:12:12.000Z">
+<meta property="article:author" content="Ihopenot">
+<meta property="article:tag" content="IOT">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ihopenot.github.io/2023/05/30/%E5%A2%A8%E6%B0%B4%E5%B1%8F%E6%8A%98%E8%85%BE/result1.jpg">
+
+
+<link rel="canonical" href="https://ihopenot.github.io/2023/05/30/%E5%A2%A8%E6%B0%B4%E5%B1%8F%E6%8A%98%E8%85%BE/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ihopenot.github.io/2023/05/30/%E5%A2%A8%E6%B0%B4%E5%B1%8F%E6%8A%98%E8%85%BE/","path":"2023/05/30/墨水屏折腾/","title":"墨水屏折腾"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>墨水屏折腾 | Ihopenot</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ihopenot</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Brownian motion</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">6</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">13</span></a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%89%B9%E5%A2%A8%E6%B0%B4%E5%B1%8F"><span class="nav-number">2.</span> <span class="nav-text">第一批墨水屏</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%89%B9%E5%A2%A8%E6%B0%B4%E5%B1%8F"><span class="nav-number">3.</span> <span class="nav-text">第二批墨水屏</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ihopenot"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ihopenot</p>
+  <div class="site-description" itemprop="description">is the random motion of particles suspended in a medium</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ihopenot" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ihopenot" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/984430652@qq.com" title="E-Mail → 984430652@qq.com" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ihopenot.github.io/2023/05/30/%E5%A2%A8%E6%B0%B4%E5%B1%8F%E6%8A%98%E8%85%BE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ihopenot">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ihopenot">
+      <meta itemprop="description" content="is the random motion of particles suspended in a medium">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="墨水屏折腾 | Ihopenot">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          墨水屏折腾
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-05-30 16:24:01" itemprop="dateCreated datePublished" datetime="2023-05-30T16:24:01+08:00">2023-05-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-08-24 22:12:12" itemprop="dateModified" datetime="2023-08-24T22:12:12+08:00">2023-08-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>去年就买了几个墨水屏，本来打算玩的，但是一直抽不出时间（懒）。最近稍微闲下来点，来研究下墨水屏。</p>
+<p>一开始捡的闲鱼2.13寸的黑白屏，7块钱一个。但是这个不支持蓝牙，玩了一下又入了一批支持蓝牙的版本，无线刷图还是要舒服一些的。</p>
+<h1 id="第一批墨水屏"><a href="#第一批墨水屏" class="headerlink" title="第一批墨水屏"></a>第一批墨水屏</h1><p>这批墨水屏是Stellar-M型号的，一开始看了很多资料，感觉可搞才入的，但是后来到手才发现屏和主流的Stellar-M不太一样。</p>
+<p>拆解和烧录程序参考<a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv21954945/">这篇文章</a>，这篇文章写的挺好，整个的操作基本是按照这篇文章走的。</p>
+<p>汉朔的电池都是类似的拆法，拿螺丝刀抵住后面的卡扣往上翘就行，很容易拆下来。前面板是胶封的，得拿小刀从旁边小心的撬。</p>
+<p>拆下来看，板子的主控是MSP430G2553，屏是WF0213T5PBZ08230H。</p>
+<p>这个屏型号具体信息网上也搜不到，<a target="_blank" rel="noopener" href="https://github.com/CursedHardware/epd-datasheet">这个仓库</a>里有类似型号的信息，但也不多，应该是<a target="_blank" rel="noopener" href="http://www.wf-tech.com/">WF-Tech无锡威峰</a>的屏。</p>
+<p>板子拆出来之后用串口怼上去，我用的CH340G，接线方法参考上面那篇文章。理想情况是可以只拆电池然后接调试口刷的，但是用串口刷的话要从pcb前面飞线，所以一定得把板子拆下来。</p>
+<span id="more"></span>
+
+<p>软件是使用IAR for msp430，之后的编译过程和烧录过程都和上面的文章一样。</p>
+<p>然后喜闻乐见刷上去没反应。</p>
+<p>网上搜了半天发现了<a target="_blank" rel="noopener" href="https://colz.com.cn/index.php/archives/34/">这篇文章</a>，发现是因为屏的原因，这个屏的主控是UC8151C，跟Eink的那款屏主控不一样，交互协议也不一样，而且屏的具体参数也有区别，UC8151C的这款屏分辨率是104*212的，相比之下分辨率要小了一圈，但是主控是支持4阶灰度显示的，这点比较好。</p>
+<p>这个屏相关的一些讨论还有<a target="_blank" rel="noopener" href="https://www.mydigit.cn/forum.php?mod=viewthread&tid=242990">这个Thread</a>。</p>
+<p>从colz那篇文章里抓出来的代码刷上去已经可以正确驱动墨水屏了，但是没有灰度显示。难得有个支持灰度的屏不能用也太憋屈了。但是论坛老哥虽然说支持4灰阶但是也没给代码。</p>
+<p>然后自己网上搜搜主控相关资料，发现大连佳显有一款屏也是同型号的主控，而且例程有四灰阶的显示，直接把例程移植过去，成了。</p>
+<img src="result1.jpg" alt="result1" style="zoom: 15%;" />
+
+<p>这个板子上还有个2.4G无线芯片A7106，理论上可以从一个屏控制其他屏，但是代码不会写，没研究了（</p>
+<h1 id="第二批墨水屏"><a href="#第二批墨水屏" class="headerlink" title="第二批墨水屏"></a>第二批墨水屏</h1><p>这批墨水屏型号是Stellar-M3N@E31A和Stellar-XL3N@E31A。相比之前的墨水屏这个支持黑白红三色显示，而且主控有蓝牙功能，据说带N是支持NFC的意思，但是不太会玩。</p>
+<p>2.13寸屏拆解的过程和之前的一样，4.2寸的屏因为前面板是卡扣扣上的，所以是可以无损拆卸的。</p>
+<p>4.2寸的pcb整个和2.13不能说完全一致，只能说十分相似，肉眼看了下就4.2寸多了个flash，连layout也几乎一致。实际上2.13的代码改了改分辨率就能直接丢到4.2上跑，所以下面主要以2.13寸的屏来说下。</p>
+<p>拆下来主控是TI的CC2640，屏是DEPG0213RHS75AF1CP，东方科脉的屏。这个屏在前面那个datasheet里也能找到同型号的屏，但是在后面实际开发过程中感觉这个数据是有点问题的。</p>
+<p>先研究下怎么刷固件，正好手头有一个jlink，pcb背板引出来的调试接口感觉正好是给cjtag用的，准备用cjtag刷一下，但是接上之后没反应。网上搜了下发现是说cc2640有cjtag但是只有xds的调试器是支持的，jlink用不了。</p>
+<p>无奈找同学接了一个xds110来刷，这下认了。</p>
+<p>接线就是背板的VCC，GND，TMS，TCK，NRST和xds110对应的引脚接起来就行了，垃圾焊工导致下面这个板子TMS焊盘被我搞掉了（后来整了个调试夹子</p>
+<img src="bak2.13.jpg" alt="2.13bak" style="zoom:15%;" />
+
+<p>刷写固件用的是uniflash，一开始不知道为啥xds读取写入感觉怪怪的，老是写不进去，而且读取有时候能读，有时候读出来有是空的，感觉供电有点问题，把xds板子上面一个XDS110Power的脚短接之后就正常了。。。也不知道这个脚具体是干啥的。供电不稳的情况下强行写入还把一个板子干烂了，好像是把CCFG写了把调试接口锁了。。血亏5块。</p>
+<p>之后找能用的固件，一开始入这个板子原本是看到<a target="_blank" rel="noopener" href="https://github.com/atc1441/ATC_TLSR_Paper">这个项目</a>，专门找的Stellar-M3N买的，结果到手了发现还是不一样（。那个项目的主控是TLSR8359，这个板子是cc2640，直接烂掉。</p>
+<p>之后找找有没有别的可以用的，然后发现了<a target="_blank" rel="noopener" href="https://www.cnblogs.com/myfish3/p/14404414.html">这篇文章</a>，都是CC2640的主控，整个源码编译烧录流程可以直接按照他这个走。<a target="_blank" rel="noopener" href="https://github.com/muyuchl/cc2640BleEpd">他的仓库</a>里的代码也可以直接使用，就直接拿他的代码来用了。</p>
+<p>蓝牙控制试了下他仓库里的app，发现实在有点难用，然后找了<a target="_blank" rel="noopener" href="https://github.com/reece15/stellar-L3N-etag">这个仓库</a>的web端来操控，稍微改了下两边的源码把它们胶起来，就可以舒服的使用了。</p>
+<p>然后有了之前折腾灰度的经验，想着能不能把这个屏也搞上灰度，研究了一下发现了<a target="_blank" rel="noopener" href="https://github.com/ieiao/epd-gray-demo">这个仓库</a>，原理是用到了一个叫LUT的东西，即 Waveform Look Up Table(LUT)，详细说明可以看<a target="_blank" rel="noopener" href="https://andelf.github.io/blog/2021/01/14/play-with-2-13-inch-e-ink-display/">这篇博客</a>的结尾。</p>
+<p>然后对照了看了下源码和芯片手册，本来照着epd-datasheet查出来屏的主控是SSD1675B，但是手册上LUT感觉对不上，源码中LUT长度只有70，之后东翻翻西找找好像找到了这个屏的官方文档<a target="_blank" rel="noopener" href="https://github.com/eleree/depg0213rh">https://github.com/eleree/depg0213rh</a>，这个屏的主控疑似是SSD1619A，之后照着手册搓了个LUT出来，</p>
+<p><img src="/2023/05/30/%E5%A2%A8%E6%B0%B4%E5%B1%8F%E6%8A%98%E8%85%BE/lut.png" alt="lut"></p>
+<p>大意就是刷黑的话就每次以正电压持续3个周期，之后静置5个周期，纯yy出来的，感觉效果还行。要刷4阶灰度就先用这个波形刷一遍最浅的灰，之后在用这个波形刷一遍，如果刷的区域和最浅的灰重叠，重叠部分就会变成较黑的灰，同理再刷更深色的灰，这个波形刷3次基本就是黑色的，所以只有4阶灰。更高的灰阶也可以实现，只要改下持续周期和电压强度。</p>
+<p>之后改了下web，上屏，使用。</p>
+<img src="bgr.jpg" alt="bgr" style="zoom:15%;" />
+
+<img src="gray.jpg" alt="gray" style="zoom:15%;" />
+
+<p>支持bw和bwr，灰度三种显示模式。</p>
+<p>这个项目开源放在了<a target="_blank" rel="noopener" href="https://github.com/ihopenot/ihopebleepd">https://github.com/ihopenot/ihopebleepd</a></p>
+<p>局刷也能搞，把清空的波形去掉就行了，懒得搞了，反正只是显示图片。</p>
+<p>低功耗不会搞（，现在得经常把电池拔拔插插来省电（</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/IOT/" rel="tag"># IOT</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/04/02/ChurchNumber%E5%92%8C%E5%87%BD%E6%95%B0%E5%BC%8F%E5%88%9D%E6%8E%A2/" rel="prev" title="ChurchNumber和函数式初探">
+                  <i class="fa fa-angle-left"></i> ChurchNumber和函数式初探
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ihopenot</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/ihopenot" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

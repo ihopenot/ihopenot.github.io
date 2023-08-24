@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ihopenot.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="分析寻找游戏逻辑代码​	上手发现是个unity游戏，首先找Assembly-Csharp.dll，没有，是个il2cpp打包了的游戏。那就找il2cpp.dll和global-metadata。找到了，但是都被加密了。 ​	那么现在要做的有il2cpp.dll的解密和global-metadata的解密。 ​	il2cpp.dll解密估计在libsec2021里，当然也可以直接dump，globa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tgstc-2021-Android-复赛">
+<meta property="og:url" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/index.html">
+<meta property="og:site_name" content="Ihopenot">
+<meta property="og:description" content="分析寻找游戏逻辑代码​	上手发现是个unity游戏，首先找Assembly-Csharp.dll，没有，是个il2cpp打包了的游戏。那就找il2cpp.dll和global-metadata。找到了，但是都被加密了。 ​	那么现在要做的有il2cpp.dll的解密和global-metadata的解密。 ​	il2cpp.dll解密估计在libsec2021里，当然也可以直接dump，globa">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418113812036.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418113936238.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418115606025.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418115720432.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418120014139.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418120251841.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418120555605.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121226886.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121246747.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121305171.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121337792.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121510954.png">
+<meta property="article:published_time" content="2021-04-18T03:24:34.000Z">
+<meta property="article:modified_time" content="2023-08-24T14:58:08.000Z">
+<meta property="article:author" content="Ihopenot">
+<meta property="article:tag" content="逆向">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418113812036.png">
+
+
+<link rel="canonical" href="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/","path":"2021/04/18/tgstc-2021-Android-复赛/","title":"tgstc-2021-Android-复赛"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>tgstc-2021-Android-复赛 | Ihopenot</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ihopenot</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Brownian motion</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">6</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">13</span></a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BB%E6%89%BE%E6%B8%B8%E6%88%8F%E9%80%BB%E8%BE%91%E4%BB%A3%E7%A0%81"><span class="nav-number">1.1.</span> <span class="nav-text">寻找游戏逻辑代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%BB%E9%99%A4%E5%8F%8D%E8%B0%83%E8%AF%95"><span class="nav-number">1.2.</span> <span class="nav-text">去除反调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%AF%86libunity%E5%92%8Clibil2cpp"><span class="nav-number">1.3.</span> <span class="nav-text">解密libunity和libil2cpp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%81%A2%E5%A4%8Dglobal-metadata"><span class="nav-number">1.4.</span> <span class="nav-text">恢复global-metadata</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%97%A0%E6%95%8C%E7%89%88"><span class="nav-number">1.5.</span> <span class="nav-text">修改无敌版</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ihopenot"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ihopenot</p>
+  <div class="site-description" itemprop="description">is the random motion of particles suspended in a medium</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ihopenot" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ihopenot" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/984430652@qq.com" title="E-Mail → 984430652@qq.com" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ihopenot.github.io/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ihopenot">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ihopenot">
+      <meta itemprop="description" content="is the random motion of particles suspended in a medium">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="tgstc-2021-Android-复赛 | Ihopenot">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          tgstc-2021-Android-复赛
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-04-18 11:24:34" itemprop="dateCreated datePublished" datetime="2021-04-18T11:24:34+08:00">2021-04-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-08-24 22:58:08" itemprop="dateModified" datetime="2023-08-24T22:58:08+08:00">2023-08-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><h3 id="寻找游戏逻辑代码"><a href="#寻找游戏逻辑代码" class="headerlink" title="寻找游戏逻辑代码"></a>寻找游戏逻辑代码</h3><p>​	上手发现是个unity游戏，首先找Assembly-Csharp.dll，没有，是个il2cpp打包了的游戏。那就找il2cpp.dll和global-metadata。找到了，但是都被加密了。</p>
+<p>​	那么现在要做的有il2cpp.dll的解密和global-metadata的解密。</p>
+<p>​	il2cpp.dll解密估计在libsec2021里，当然也可以直接dump，global-metadata可以动调断在il2cpp里跟或者直接GG搜内存dump。</p>
+<h3 id="去除反调试"><a href="#去除反调试" class="headerlink" title="去除反调试"></a>去除反调试</h3><p>​	考虑到之后还要修改，去除反调试应该是难以避免的。</p>
+<p>​	打开就看到和初赛一样一样的字符串加解密算法，但是全部内联到了程序里面。</p>
+<img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418113812036.png" class="" title="image-20210418113812036">
+
+<p>​	之前的方法不太好处理，也懒得分析它的算法，暂时先不管。</p>
+<span id="more"></span>
+
+<p>​	打开调试器启动，准备找下它的反调试的核心函数，发现自杀的代码基本长一个样。</p>
+<p>​	<img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418113936238.png" class="" title="image-20210418113936238"></p>
+<p>​	通过异或产生一个不合法地址然后跳过去。可以用IDApython批量下断。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">find_maybe_bad</span>(<span class="params">start, end</span>):</span><br><span class="line">    inst = start</span><br><span class="line">    <span class="keyword">while</span> inst &lt; end:</span><br><span class="line">        <span class="keyword">if</span> GetDisasm(inst).startswith(<span class="string">&quot;EOR&quot;</span>):</span><br><span class="line">            <span class="keyword">if</span> GetDisasm(next_head(inst)).startswith(<span class="string">&quot;BLX&quot;</span>):</span><br><span class="line">                bpaddr = next_head(inst)</span><br><span class="line">                add_bpt(bpaddr)</span><br><span class="line">                ida_dbg.disable_bpt(bpaddr)</span><br><span class="line">        inst = next_head(inst)</span><br></pre></td></tr></table></figure>
+
+<p>​	可以断下来接近60个地方。。。看了下反调会影响函数流程，也不敢轻易乱改，只能让它跑起来再把撞上的断点一个个手动修了，肉眼看到的有检测ida和frida的文件和端口，手动过一下这些反调可以让你在程序里少patch几个地方。。。</p>
+<p>​	最后只需要手动改不到10个地方就可以绕过反调了。</p>
+<p>​	其实更应该去找上层一点反调试代码，比如启动反调试线程的地方，但是程序本身大量混淆非常难看，找起来很麻烦。</p>
+<p>​	混淆类似ollvm的那种，感觉要去的话angr也挺好去的，符号执行到块结尾看BLX到哪里去，分支代码特征也很明显，都是ADDNE, MOVEQ这类的指令（口胡。</p>
+<h3 id="解密libunity和libil2cpp"><a href="#解密libunity和libil2cpp" class="headerlink" title="解密libunity和libil2cpp"></a>解密libunity和libil2cpp</h3><p>​	有了上面的工作理论上已经可以调试了，但是实际上跑起来会死在libunity里面，而且跟过去也发现全是乱的，估计是libsec2021中用了校验码之类的东西去解密libunity.so，因为我们的patch导致解密失败，解出来的东西自然全是屎。</p>
+<p>​	手动跟下libunity的init_proc，发现最终解密函数也是在libsec2021中。</p>
+<p>​	而且发现这个地方很可疑。</p>
+<img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418115606025.png" class="" title="image-20210418115606025">
+
+<p>​	其中用到的值被放在堆里，其指针放在</p>
+<img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418115720432.png" class="" title="image-20210418115720432">
+
+<p>​	怀疑是key，直接GG挂上去看正常运行时的值，手动填进去试试，发现跑起来了。</p>
+<p>​	解密程序其中取出了2个dword，但只使用了它们的异或值，所以这样patch程序也没问题：</p>
+<img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418120014139.png" class="" title="image-20210418120014139">
+
+<p>​	</p>
+<p>​	好了，到这一步已经可以畅通无阻调试了。</p>
+<h3 id="恢复global-metadata"><a href="#恢复global-metadata" class="headerlink" title="恢复global-metadata"></a>恢复global-metadata</h3><p>​	直接从内存中dump出来il2cpp.dll。global-metadata在il2cpp.so中下断后dump出来，断在下图第一个函数：</p>
+<img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418120251841.png" class="" title="image-20210418120251841">
+
+<p>​	丢到il2cppDumper，报错了，也算意料之中。</p>
+<p>​	找原因东找找西找找，最后对着源码看了下后面</p>
+<img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418120555605.png" class="" title="image-20210418120555605">
+
+<p>​	偏移对不上，错位了。然后对着源码一个区段一个区段看，最后发现是把开头的3个string相关的区段挪到了中间去，所以其他区段全错位了，而且字符串区段还被加密了，加密就是个异或。</p>
+<img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121226886.png" class="" title="image-20210418121226886">
+
+<p>​	写个python脚本手动修了下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">opart = []</span><br><span class="line">part = [<span class="number">0</span>]</span><br><span class="line">head = <span class="string">b&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dec</span>(<span class="params">buf</span>):</span><br><span class="line">	ret = <span class="string">b&#x27;&#x27;</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(buf)):</span><br><span class="line">		<span class="keyword">if</span> buf[i] == <span class="number">0</span>:</span><br><span class="line">			ret += <span class="string">b&#x27;\x00&#x27;</span></span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		v = (i&amp;<span class="number">0x7f</span>) ^ (buf[i] - <span class="number">0x7f</span>) ^ <span class="number">0x5c</span></span><br><span class="line">		ret += <span class="built_in">bytes</span>([v])</span><br><span class="line">	<span class="keyword">return</span> ret</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;gmdata&quot;</span>, <span class="string">&quot;rb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">	raw = f.read()</span><br><span class="line">	head = raw[:<span class="number">8</span>]</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">33</span>):</span><br><span class="line">		offset = u32(raw[i*<span class="number">8</span>+<span class="number">8</span>: i*<span class="number">8</span>+<span class="number">12</span>])</span><br><span class="line">		count = u32(raw[i*<span class="number">8</span>+<span class="number">12</span>: i*<span class="number">8</span>+<span class="number">16</span>])</span><br><span class="line">		part.append(raw[offset: offset+count])</span><br><span class="line"></span><br><span class="line">opart.append(part[<span class="number">23</span>])</span><br><span class="line">opart.append(part[<span class="number">24</span>])</span><br><span class="line">opart.append(dec(part[<span class="number">25</span>]))</span><br><span class="line">opart = opart + part[<span class="number">1</span>:<span class="number">23</span>] + part[<span class="number">26</span>:]</span><br><span class="line"></span><br><span class="line">nowoff = <span class="number">0x110</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> opart:</span><br><span class="line">	<span class="built_in">print</span>(<span class="built_in">type</span>(i))</span><br><span class="line">	head += p32(nowoff)</span><br><span class="line">	head += p32(<span class="built_in">len</span>(i))</span><br><span class="line">	nowoff += <span class="built_in">len</span>(i)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> opart:</span><br><span class="line">	head += i</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;fixMeta&quot;</span>, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">	f.write(head)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>​	修复出来还是报错，手动跟il2cppDumper的源码调试，发现它有个区段认错了，怀疑是版本号有问题，因为这个区段在版本27中是没有的，手动把版本号改成24，成功dump出Assembly-Csharp.dll文件。</p>
+<h3 id="修改无敌版"><a href="#修改无敌版" class="headerlink" title="修改无敌版"></a>修改无敌版</h3><p>​	剩下的工作就很简单了，用ida脚本恢复出来符号信息，找到关键函数。</p>
+<img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121246747.png" class="" title="image-20210418121246747">
+
+<p>​	判断是否障碍物</p>
+<img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121305171.png" class="" title="image-20210418121305171">
+
+<p><img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121337792.png" alt="image-20210418121337792"></p>
+<p>​	因为没有分析加解密具体算法，所以这里使用自修改的patch，修改libsec2021中的解密代码，让它解密结束之后将将对应位置改掉。</p>
+<img src="/2021/04/18/tgstc-2021-Android-%E5%A4%8D%E8%B5%9B/image-20210418121510954.png" class="" title="image-20210418121510954">
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91/" rel="tag"># 逆向</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/04/18/tgstc-2021-Android-%E5%88%9D%E8%B5%9B/" rel="prev" title="tgstc-2021-Android-初赛">
+                  <i class="fa fa-angle-left"></i> tgstc-2021-Android-初赛
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/05/14/%E6%B4%A5%E9%97%A8%E6%9D%AF2021%E5%88%9D%E8%B5%9Bwp/" rel="next" title="津门杯2021初赛wp">
+                  津门杯2021初赛wp <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ihopenot</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/ihopenot" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

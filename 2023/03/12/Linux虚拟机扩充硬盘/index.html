@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ihopenot.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="前言由于虚拟机硬盘经常被干满，就需要经常去加盘，每次加盘都要上网搜一下fdisk怎么用，很麻烦，因此，在这篇博客中我将总结一下这个过程，以便以后可以直接查阅。 虚拟机硬盘扩充（fdisk）当虚拟机硬盘空间不足时，我们该如何处理？通常有两种选择：添加一块新硬盘或者增大原有硬盘的容量。 对于不使用LVM（逻辑卷管理）的情况，添加新硬盘并不容易直接扩展原始分区的容量。这对于像我这样将整个硬盘挂载在根目录">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux虚拟机扩充硬盘">
+<meta property="og:url" content="https://ihopenot.github.io/2023/03/12/Linux%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%89%A9%E5%85%85%E7%A1%AC%E7%9B%98/index.html">
+<meta property="og:site_name" content="Ihopenot">
+<meta property="og:description" content="前言由于虚拟机硬盘经常被干满，就需要经常去加盘，每次加盘都要上网搜一下fdisk怎么用，很麻烦，因此，在这篇博客中我将总结一下这个过程，以便以后可以直接查阅。 虚拟机硬盘扩充（fdisk）当虚拟机硬盘空间不足时，我们该如何处理？通常有两种选择：添加一块新硬盘或者增大原有硬盘的容量。 对于不使用LVM（逻辑卷管理）的情况，添加新硬盘并不容易直接扩展原始分区的容量。这对于像我这样将整个硬盘挂载在根目录">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-03-12T13:24:54.000Z">
+<meta property="article:modified_time" content="2023-08-24T14:35:48.000Z">
+<meta property="article:author" content="Ihopenot">
+<meta property="article:tag" content="运维">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ihopenot.github.io/2023/03/12/Linux%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%89%A9%E5%85%85%E7%A1%AC%E7%9B%98/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ihopenot.github.io/2023/03/12/Linux%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%89%A9%E5%85%85%E7%A1%AC%E7%9B%98/","path":"2023/03/12/Linux虚拟机扩充硬盘/","title":"Linux虚拟机扩充硬盘"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux虚拟机扩充硬盘 | Ihopenot</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ihopenot</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Brownian motion</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">6</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">13</span></a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%A1%AC%E7%9B%98%E6%89%A9%E5%85%85%EF%BC%88fdisk%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">虚拟机硬盘扩充（fdisk）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%8E%9F%E5%A7%8B%E5%88%86%E5%8C%BA%E8%A1%A8%E4%BF%A1%E6%81%AF"><span class="nav-number">2.1.</span> <span class="nav-text">查看原始分区表信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%88%86%E5%8C%BA%E8%A1%A8"><span class="nav-number">2.2.</span> <span class="nav-text">修改分区表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">2.3.</span> <span class="nav-text">扩展文件系统</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%A1%AC%E7%9B%98%E6%89%A9%E5%85%85%EF%BC%88lvm%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">虚拟机硬盘扩充（lvm）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8Blvm%E4%BF%A1%E6%81%AF"><span class="nav-number">3.1.</span> <span class="nav-text">查看lvm信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E5%88%86%E5%8C%BA"><span class="nav-number">3.2.</span> <span class="nav-text">新建分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%85%85%E5%8D%B7%E7%BB%84"><span class="nav-number">3.3.</span> <span class="nav-text">扩充卷组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%85%85%E9%80%BB%E8%BE%91%E5%8D%B7"><span class="nav-number">3.4.</span> <span class="nav-text">扩充逻辑卷</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ihopenot"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ihopenot</p>
+  <div class="site-description" itemprop="description">is the random motion of particles suspended in a medium</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ihopenot" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ihopenot" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/984430652@qq.com" title="E-Mail → 984430652@qq.com" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ihopenot.github.io/2023/03/12/Linux%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%89%A9%E5%85%85%E7%A1%AC%E7%9B%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ihopenot">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ihopenot">
+      <meta itemprop="description" content="is the random motion of particles suspended in a medium">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux虚拟机扩充硬盘 | Ihopenot">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux虚拟机扩充硬盘
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-03-12 21:24:54" itemprop="dateCreated datePublished" datetime="2023-03-12T21:24:54+08:00">2023-03-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-08-24 22:35:48" itemprop="dateModified" datetime="2023-08-24T22:35:48+08:00">2023-08-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>由于虚拟机硬盘经常被干满，就需要经常去加盘，每次加盘都要上网搜一下fdisk怎么用，很麻烦，因此，在这篇博客中我将总结一下这个过程，以便以后可以直接查阅。</p>
+<h1 id="虚拟机硬盘扩充（fdisk）"><a href="#虚拟机硬盘扩充（fdisk）" class="headerlink" title="虚拟机硬盘扩充（fdisk）"></a>虚拟机硬盘扩充（fdisk）</h1><p>当虚拟机硬盘空间不足时，我们该如何处理？通常有两种选择：添加一块新硬盘或者增大原有硬盘的容量。</p>
+<p>对于不使用LVM（逻辑卷管理）的情况，添加新硬盘并不容易直接扩展原始分区的容量。这对于像我这样将整个硬盘挂载在根目录（&#x2F;）下的用户来说并不友好。</p>
+<p>因此，通常我们会选择增大原有硬盘的容量。这样一来，fdisk就可以识别到硬盘容量的增加。但是，由于分区表尚未修改，实际可用空间并不会有所变化。</p>
+<p>接下来，我们将通过fdisk来扩大分区容量。</p>
+<p><strong>数据无价，谨慎操作，如有重要信息，务必提前备份。</strong></p>
+<span id="more"></span>
+
+<h2 id="查看原始分区表信息"><a href="#查看原始分区表信息" class="headerlink" title="查看原始分区表信息"></a>查看原始分区表信息</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">ihopenot@ihopenot-virtual-machine:~$ sudo fdisk /dev/sda</span><br><span class="line"></span><br><span class="line">Welcome to fdisk (util-linux 2.34).</span><br><span class="line">Changes will remain in memory only, until you decide to write them.</span><br><span class="line">Be careful before using the write command.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Command (m for help): p</span><br><span class="line">Disk /dev/sda: 100 GiB, 107374182400 bytes, 209715200 sectors</span><br><span class="line">Disk model: Virtual disk    </span><br><span class="line">Units: sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line">Disklabel type: dos</span><br><span class="line">Disk identifier: 0x07ea7416</span><br><span class="line"></span><br><span class="line">Device     Boot   Start       End   Sectors  Size Id Type</span><br><span class="line">/dev/sda1  *       2048   1050623   1048576  512M  b W95 FAT32</span><br><span class="line">/dev/sda2       1052670 188741631 187688962 89.5G  5 Extended</span><br><span class="line">/dev/sda5       1052672 188741631 187688960 89.5G 83 Linux</span><br><span class="line"></span><br><span class="line">Command (m for help): F</span><br><span class="line">Unpartitioned space /dev/sda: 10 GiB, 10738466816 bytes, 20973568 sectors</span><br><span class="line">Units: sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line"></span><br><span class="line">    Start       End  Sectors Size</span><br><span class="line">188741632 209715199 20973568  10G</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>sudo fdisk /dev/*</code>来打开硬盘，p查看分区信息，F查看未分配的区域。</p>
+<p>可以看到扩充的10个G是硬盘最末尾的区域。</p>
+<p>如果sda5是primary分区的话可以直接删除sda5，再新建一个sda5将后面未分配的区域包括进来就行了。由于这里sda5是sda2扩展出来的逻辑分区，所以操作麻烦一点。另外，如果要扩展的分区不是最后一个的话会比较麻烦，可能需要将后面的分区先备份之后再扩展了。</p>
+<h2 id="修改分区表"><a href="#修改分区表" class="headerlink" title="修改分区表"></a>修改分区表</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">Command (m for help): p  </span><br><span class="line">Disk /dev/sda: 100 GiB, 107374182400 bytes, 209715200 sectors</span><br><span class="line">Disk model: Virtual disk    </span><br><span class="line">Units: sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line">Disklabel type: dos</span><br><span class="line">Disk identifier: 0x07ea7416</span><br><span class="line"></span><br><span class="line">Device     Boot   Start       End   Sectors  Size Id Type</span><br><span class="line">/dev/sda1  *       2048   1050623   1048576  512M  b W95 FAT32</span><br><span class="line">/dev/sda2       1052670 188741631 187688962 89.5G  5 Extended</span><br><span class="line">/dev/sda5       1052672 188741631 187688960 89.5G 83 Linux			// 需要扩充的分区，注意记录一下Start sector的值</span><br><span class="line"></span><br><span class="line">Command (m for help): d      // 删除2号分区</span><br><span class="line">Partition number (1,2,5, default 5): 2</span><br><span class="line"></span><br><span class="line">Partition 2 has been deleted.</span><br><span class="line"></span><br><span class="line">Command (m for help): p</span><br><span class="line">Disk /dev/sda: 100 GiB, 107374182400 bytes, 209715200 sectors</span><br><span class="line">Disk model: Virtual disk    </span><br><span class="line">Units: sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line">Disklabel type: dos</span><br><span class="line">Disk identifier: 0x07ea7416</span><br><span class="line"></span><br><span class="line">Device     Boot Start     End Sectors  Size Id Type</span><br><span class="line">/dev/sda1  *     2048 1050623 1048576  512M  b W95 FAT32</span><br><span class="line"></span><br><span class="line">Command (m for help): n				//创建新的extend分区</span><br><span class="line">Partition type</span><br><span class="line">   p   primary (1 primary, 0 extended, 3 free)</span><br><span class="line">   e   extended (container for logical partitions)</span><br><span class="line">Select (default p): e</span><br><span class="line">Partition number (2-4, default 2): </span><br><span class="line">First sector (1050624-209715199, default 1050624): 		// 默认即可，没必要和之前一样</span><br><span class="line">Last sector, +/-sectors or +/-size&#123;K,M,G,T,P&#125; (1050624-209715199, default 209715199): </span><br><span class="line"></span><br><span class="line">Created a new partition 2 of type &#x27;Extended&#x27; and of size 99.5 GiB.</span><br><span class="line">Partition #2 contains a vfat signature.</span><br><span class="line"></span><br><span class="line">Do you want to remove the signature? [Y]es/[N]o: Y		// 不确定是否必须移除</span><br><span class="line"></span><br><span class="line">The signature will be removed by a write command.</span><br><span class="line"></span><br><span class="line">Command (m for help): p</span><br><span class="line">Disk /dev/sda: 100 GiB, 107374182400 bytes, 209715200 sectors</span><br><span class="line">Disk model: Virtual disk    </span><br><span class="line">Units: sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line">Disklabel type: dos</span><br><span class="line">Disk identifier: 0x07ea7416</span><br><span class="line"></span><br><span class="line">Device     Boot   Start       End   Sectors  Size Id Type</span><br><span class="line">/dev/sda1  *       2048   1050623   1048576  512M  b W95 FAT32</span><br><span class="line">/dev/sda2       1050624 209715199 208664576 99.5G  5 Extended</span><br><span class="line"></span><br><span class="line">Filesystem/RAID signature on partition 2 will be wiped.</span><br><span class="line"></span><br><span class="line">Command (m for help): n					// 新建逻辑分区</span><br><span class="line">All space for primary partitions is in use.</span><br><span class="line">Adding logical partition 5</span><br><span class="line">First sector (1052672-209715199, default 1052672): 		// 起始sector，一定要和之前一样</span><br><span class="line">Last sector, +/-sectors or +/-size&#123;K,M,G,T,P&#125; (1052672-209715199, default 209715199): </span><br><span class="line"></span><br><span class="line">Created a new partition 5 of type &#x27;Linux&#x27; and of size 99.5 GiB.</span><br><span class="line">Partition #5 contains a ext4 signature.</span><br><span class="line"></span><br><span class="line">Do you want to remove the signature? [Y]es/[N]o: Y		// 不确定是否必须移除</span><br><span class="line"></span><br><span class="line">The signature will be removed by a write command.</span><br><span class="line"></span><br><span class="line">Command (m for help): w					// 写回磁盘</span><br><span class="line">The partition table has been altered.</span><br><span class="line">Failed to add partition 2 to system: Device or resource busy</span><br><span class="line"></span><br><span class="line">The kernel still uses the old partitions. The new table will be used at the next reboot. </span><br><span class="line">Syncing disks.</span><br></pre></td></tr></table></figure>
+
+<p>因为sda5是sda2 extend的逻辑分区，所以这里直接把sda2整个删了重建，不知道为啥只删sda5再重建的话起始sector不在可选范围里。</p>
+<p>之后新建sda2，选extend不要选primary，新建sda5，如果让选分区类型就选logical，注意新建sda5的时候起始的sector<strong>一定要和之前的分区表一致，不然会丢数据。</strong></p>
+<p>如果要扩充的是primary分区，就直接删除重建对应分区就行，也要保证起始sector一致。</p>
+<h2 id="扩展文件系统"><a href="#扩展文件系统" class="headerlink" title="扩展文件系统"></a>扩展文件系统</h2><p>fdisk将更改写回磁盘后重启一下就能生效了，但是用df看的话可用磁盘空间还是不会变，这是因为虽然分区的容量扩充了，但是上面的文件系统并不知道，需要使用resize2fs将对应分区上的文件系统扩容，之后就能正常使用了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">ihopenot@ihopenot-virtual-machine:~$ df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">udev            7.8G     0  7.8G   0% /dev</span><br><span class="line">tmpfs           1.6G  1.6M  1.6G   1% /run</span><br><span class="line">/dev/sda5        88G  7.0G   77G   9% /						// sda5大小未改变</span><br><span class="line"></span><br><span class="line">ihopenot@ihopenot-virtual-machine:~$ sudo resize2fs /dev/sda5</span><br><span class="line">resize2fs 1.45.5 (07-Jan-2020)</span><br><span class="line">Filesystem at /dev/sda5 is mounted on /; on-line resizing required</span><br><span class="line">old_desc_blocks = 12, new_desc_blocks = 13</span><br><span class="line">The filesystem on /dev/sda5 is now 26082816 (4k) blocks long.</span><br><span class="line"></span><br><span class="line">ihopenot@ihopenot-virtual-machine:~$ df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">udev            7.8G     0  7.8G   0% /dev</span><br><span class="line">tmpfs           1.6G  1.6M  1.6G   1% /run</span><br><span class="line">/dev/sda5        98G  7.0G   86G   8% /						// 成功扩容</span><br></pre></td></tr></table></figure>
+
+<h1 id="虚拟机硬盘扩充（lvm）"><a href="#虚拟机硬盘扩充（lvm）" class="headerlink" title="虚拟机硬盘扩充（lvm）"></a>虚拟机硬盘扩充（lvm）</h1><p>lvm（<em>Logical Volume Manager</em>）是一个逻辑卷管理器，在物理磁盘上抽象出的逻辑分区，由于直接使用物理磁盘的分区存储扩展和管理起来非常麻烦，比如之前说到的，如果磁盘上未分配的区域不是正好在要扩充的分区后面紧贴着，那么扩展这个分区就相当麻烦。在这种情况下，lvm应运而生。</p>
+<p>在ubuntu安装的过程中，可以选择开启lvm。之后再进行磁盘的扩充就非常容易了。</p>
+<p>扩充lvm的逻辑是，在未分配的磁盘区域或是一块新磁盘上新建一块分区，并在这个分区上创建PV（Physical volume），之后将PV加入到你要扩充的LV（Logical Volume）所在的VG（Volume group），之后扩展LV的容量大小，最后resize一下这个LV上的文件系统。</p>
+<h2 id="查看lvm信息"><a href="#查看lvm信息" class="headerlink" title="查看lvm信息"></a>查看lvm信息</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">ihopenot@ubuntu:~$ lsblk</span><br><span class="line">NAME                      MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS</span><br><span class="line">sda                         8:0    0    30G  0 disk </span><br><span class="line">├─sda1                      8:1    0     1M  0 part </span><br><span class="line">├─sda2                      8:2    0   1.8G  0 part /boot</span><br><span class="line">└─sda3                      8:3    0  18.2G  0 part </span><br><span class="line">  └─ubuntu--vg-ubuntu--lv 253:0    0    10G  0 lvm  /</span><br><span class="line">  </span><br><span class="line">ihopenot@ubuntu:~$ sudo lvdisplay </span><br><span class="line">  --- Logical volume ---</span><br><span class="line">  LV Path                /dev/ubuntu-vg/ubuntu-lv</span><br><span class="line">  LV Name                ubuntu-lv</span><br><span class="line">  VG Name                ubuntu-vg</span><br><span class="line">  LV UUID                moq0Mb-SRCu-UfxE-8ZGG-l2TN-LYdA-73CuHH</span><br><span class="line">  LV Write Access        read/write</span><br><span class="line">  LV Creation host, time ubuntu-server, 2023-03-29 09:50:31 +0000</span><br><span class="line">  LV Status              available</span><br><span class="line">  # open                 1</span><br><span class="line">  LV Size                10.00 GiB</span><br><span class="line">  Current LE             2560</span><br><span class="line">  Segments               1</span><br><span class="line">  Allocation             inherit</span><br><span class="line">  Read ahead sectors     auto</span><br><span class="line">  - currently set to     256</span><br><span class="line">  Block device           253:0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>使用lsblk和lvdisplay查看lvm相关信息，可以发现根目录 &#x2F; 是挂载的ubuntu–vg-ubuntu-lv逻辑卷。</p>
+<h2 id="新建分区"><a href="#新建分区" class="headerlink" title="新建分区"></a>新建分区</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">Command (m for help): p</span><br><span class="line"></span><br><span class="line">Disk /dev/sda: 30 GiB, 32212254720 bytes, 62914560 sectors</span><br><span class="line">Disk model: VMware Virtual S</span><br><span class="line">Units: sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line">Disklabel type: gpt</span><br><span class="line">Disk identifier: 538FA7A9-20C7-4F29-B05C-881BC791F1DF</span><br><span class="line"></span><br><span class="line">Device       Start      End  Sectors  Size Type</span><br><span class="line">/dev/sda1     2048     4095     2048    1M BIOS boot</span><br><span class="line">/dev/sda2     4096  3719167  3715072  1.8G Linux filesystem</span><br><span class="line">/dev/sda3  3719168 41940991 38221824 18.2G Linux filesystem</span><br><span class="line"></span><br><span class="line">Command (m for help): n							// 新建一个分区，使用所有剩余空间</span><br><span class="line">Partition number (4-128, default 4): </span><br><span class="line">First sector (41940992-62914526, default 41940992): </span><br><span class="line">Last sector, +/-sectors or +/-size&#123;K,M,G,T,P&#125; (41940992-62914526, default 62914526): </span><br><span class="line"></span><br><span class="line">Created a new partition 4 of type &#x27;Linux filesystem&#x27; and of size 10 GiB.</span><br><span class="line"></span><br><span class="line">Command (m for help): p</span><br><span class="line">Disk /dev/sda: 30 GiB, 32212254720 bytes, 62914560 sectors</span><br><span class="line">Disk model: VMware Virtual S</span><br><span class="line">Units: sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line">Disklabel type: gpt</span><br><span class="line">Disk identifier: 538FA7A9-20C7-4F29-B05C-881BC791F1DF</span><br><span class="line"></span><br><span class="line">Device        Start      End  Sectors  Size Type</span><br><span class="line">/dev/sda1      2048     4095     2048    1M BIOS boot</span><br><span class="line">/dev/sda2      4096  3719167  3715072  1.8G Linux filesystem</span><br><span class="line">/dev/sda3   3719168 41940991 38221824 18.2G Linux filesystem</span><br><span class="line">/dev/sda4  41940992 62914526 20973535   10G Linux filesystem</span><br><span class="line"></span><br><span class="line">Command (m for help): w</span><br><span class="line">The partition table has been altered.</span><br><span class="line">Syncing disks.</span><br></pre></td></tr></table></figure>
+
+<p>先将物理硬盘中未分配的区域新建一个分区，之后将这个分区合并到vg (volume group) 中去。</p>
+<h2 id="扩充卷组"><a href="#扩充卷组" class="headerlink" title="扩充卷组"></a>扩充卷组</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">ihopenot@ubuntu:~$ sudo vgextend ubuntu-vg /dev/sda4</span><br><span class="line">  Physical volume &quot;/dev/sda4&quot; successfully created.</span><br><span class="line">  Volume group &quot;ubuntu-vg&quot; successfully extended</span><br><span class="line">  </span><br><span class="line">ihopenot@ubuntu:~$ sudo vgdisplay </span><br><span class="line">  --- Volume group ---</span><br><span class="line">  VG Name               ubuntu-vg</span><br><span class="line">  System ID             </span><br><span class="line">  Format                lvm2</span><br><span class="line">  Metadata Areas        2</span><br><span class="line">  Metadata Sequence No  3</span><br><span class="line">  VG Access             read/write</span><br><span class="line">  VG Status             resizable</span><br><span class="line">  MAX LV                0</span><br><span class="line">  Cur LV                1</span><br><span class="line">  Open LV               1</span><br><span class="line">  Max PV                0</span><br><span class="line">  Cur PV                2</span><br><span class="line">  Act PV                2</span><br><span class="line">  VG Size               &lt;28.22 GiB</span><br><span class="line">  PE Size               4.00 MiB</span><br><span class="line">  Total PE              7224</span><br><span class="line">  Alloc PE / Size       2560 / 10.00 GiB</span><br><span class="line">  Free  PE / Size       4664 / &lt;18.22 GiB</span><br><span class="line">  VG UUID               p1xePf-Ye3h-wFoq-sFBX-kRi6-I3qI-wI0SYj</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>vgextend ubuntu-vg /dev/sda4</code>将在新分区上创建PV并加入ubuntu-vg，可以看到ubuntu-vg中Free  PE &#x2F; Size已经扩充10个G了。</p>
+<h2 id="扩充逻辑卷"><a href="#扩充逻辑卷" class="headerlink" title="扩充逻辑卷"></a>扩充逻辑卷</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">ihopenot@ubuntu:~$ df -h</span><br><span class="line">Filesystem                         Size  Used Avail Use% Mounted on</span><br><span class="line">tmpfs                              389M  1.6M  388M   1% /run</span><br><span class="line">/dev/mapper/ubuntu--vg-ubuntu--lv  9.8G  3.2G  6.2G  34% /</span><br><span class="line"></span><br><span class="line">ihopenot@ubuntu:~$ sudo lvextend --resizefs -l +50%FREE /dev/ubuntu-vg/ubuntu-lv</span><br><span class="line">  Size of logical volume ubuntu-vg/ubuntu-lv changed from 10.00 GiB (2560 extents) to &lt;19.11 GiB (4892 extents).</span><br><span class="line">  Logical volume ubuntu-vg/ubuntu-lv successfully resized.</span><br><span class="line">resize2fs 1.46.5 (30-Dec-2021)</span><br><span class="line">Filesystem at /dev/mapper/ubuntu--vg-ubuntu--lv is mounted on /; on-line resizing required</span><br><span class="line">old_desc_blocks = 2, new_desc_blocks = 3</span><br><span class="line">The filesystem on /dev/mapper/ubuntu--vg-ubuntu--lv is now 5009408 (4k) blocks long.</span><br><span class="line"></span><br><span class="line">ihopenot@ubuntu:~$ df -h</span><br><span class="line">Filesystem                         Size  Used Avail Use% Mounted on</span><br><span class="line">tmpfs                              389M  1.6M  388M   1% /run</span><br><span class="line">/dev/mapper/ubuntu--vg-ubuntu--lv   19G  3.7G   15G  21% /</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>lvextend --resizefs -l +50%FREE /dev/ubuntu-vg/ubuntu-lv</code>来扩充逻辑卷的大小，<code>--resizefs</code>参数会在扩充完成后自动扩充逻辑卷上文件系统的大小。<code>-l +50%FREE</code>指定扩容的大小，这里将50%的剩余空间分配到了当前逻辑卷，可以看到根目录 &#x2F; 的容量扩充了9个G。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag"># 运维</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/11/30/MMD/" rel="prev" title="MMD">
+                  <i class="fa fa-angle-left"></i> MMD
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/04/02/ChurchNumber%E5%92%8C%E5%87%BD%E6%95%B0%E5%BC%8F%E5%88%9D%E6%8E%A2/" rel="next" title="ChurchNumber和函数式初探">
+                  ChurchNumber和函数式初探 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ihopenot</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/ihopenot" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

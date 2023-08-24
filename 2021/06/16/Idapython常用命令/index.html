@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ihopenot.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="前言idapython几乎所有api都有注解，在 path&#x2F;to&#x2F;your&#x2F;ida&#x2F;python&#x2F;2(3)&#x2F; 里面，这里只是做个快速索引。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Idapython常用命令">
+<meta property="og:url" content="https://ihopenot.github.io/2021/06/16/Idapython%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/index.html">
+<meta property="og:site_name" content="Ihopenot">
+<meta property="og:description" content="前言idapython几乎所有api都有注解，在 path&#x2F;to&#x2F;your&#x2F;ida&#x2F;python&#x2F;2(3)&#x2F; 里面，这里只是做个快速索引。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ihopenot.github.io/2021/06/16/Idapython%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/image-20210616202525303.png">
+<meta property="og:image" content="https://ihopenot.github.io/2021/06/16/Idapython%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/image-20210617153806003.png">
+<meta property="article:published_time" content="2021-06-16T07:24:36.000Z">
+<meta property="article:modified_time" content="2023-08-24T14:46:22.000Z">
+<meta property="article:author" content="Ihopenot">
+<meta property="article:tag" content="逆向">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ihopenot.github.io/2021/06/16/Idapython%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/image-20210616202525303.png">
+
+
+<link rel="canonical" href="https://ihopenot.github.io/2021/06/16/Idapython%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ihopenot.github.io/2021/06/16/Idapython%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/","path":"2021/06/16/Idapython常用命令/","title":"Idapython常用命令"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Idapython常用命令 | Ihopenot</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ihopenot</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Brownian motion</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">6</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">13</span></a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2"><span class="nav-number">2.</span> <span class="nav-text">搜索</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ida-bytes-bin-search"><span class="nav-number">2.1.</span> <span class="nav-text">ida_bytes.bin_search</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Enum"><span class="nav-number">3.</span> <span class="nav-text">Enum</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#idaapi-add-enum"><span class="nav-number">3.1.</span> <span class="nav-text">idaapi.add_enum</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idaapi-add-enum-member"><span class="nav-number">3.2.</span> <span class="nav-text">idaapi.add_enum_member</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">4.</span> <span class="nav-text">分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#idaapi-del-func"><span class="nav-number">4.1.</span> <span class="nav-text">idaapi.del_func</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idaapi-add-func"><span class="nav-number">4.2.</span> <span class="nav-text">idaapi.add_func</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idaapi-create-insn"><span class="nav-number">4.3.</span> <span class="nav-text">idaapi.create_insn</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idaapi-del-items"><span class="nav-number">4.4.</span> <span class="nav-text">idaapi.del_items</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E5%8F%89%E5%BC%95%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">交叉引用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#idautils-CodeRefsTo"><span class="nav-number">5.1.</span> <span class="nav-text">idautils.CodeRefsTo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idautils-CodeRefsFrom"><span class="nav-number">5.2.</span> <span class="nav-text">idautils.CodeRefsFrom</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idautils-DataRefsTo"><span class="nav-number">5.3.</span> <span class="nav-text">idautils.DataRefsTo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idautils-DataRefsFrom"><span class="nav-number">5.4.</span> <span class="nav-text">idautils.DataRefsFrom</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idautils-XrefsTo"><span class="nav-number">5.5.</span> <span class="nav-text">idautils.XrefsTo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idautils-XrefsFrom"><span class="nav-number">5.6.</span> <span class="nav-text">idautils.XrefsFrom</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idautils-XrefsTypeName"><span class="nav-number">5.7.</span> <span class="nav-text">idautils.XrefsTypeName</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B1%87%E7%BC%96"><span class="nav-number">6.</span> <span class="nav-text">汇编</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#idaapi-print-insn-mnem"><span class="nav-number">6.1.</span> <span class="nav-text">idaapi.print_insn_mnem</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idc-GetDisasm"><span class="nav-number">6.2.</span> <span class="nav-text">idc.GetDisasm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idaapi-decode-insn"><span class="nav-number">6.3.</span> <span class="nav-text">idaapi.decode_insn</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idc-get-operand-type"><span class="nav-number">6.4.</span> <span class="nav-text">idc.get_operand_type</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idc-get-operand-value"><span class="nav-number">6.5.</span> <span class="nav-text">idc.get_operand_value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idc-next-head"><span class="nav-number">6.6.</span> <span class="nav-text">idc.next_head</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idc-print-operand"><span class="nav-number">6.7.</span> <span class="nav-text">idc.print_operand</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE"><span class="nav-number">7.</span> <span class="nav-text">数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#idc-get-strlit-contents"><span class="nav-number">7.1.</span> <span class="nav-text">idc.get_strlit_contents</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E4%BD%8D%E7%BD%AE%E5%80%BC"><span class="nav-number">7.2.</span> <span class="nav-text">获取指定位置值</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#idaapi-get-byte"><span class="nav-number">7.2.1.</span> <span class="nav-text">idaapi.get_byte</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#idaapi-get-word"><span class="nav-number">7.2.2.</span> <span class="nav-text">idaapi.get_word</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#idaapi-get-dword"><span class="nav-number">7.2.3.</span> <span class="nav-text">idaapi.get_dword</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#idaapi-get-qword"><span class="nav-number">7.2.4.</span> <span class="nav-text">idaapi.get_qword</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#idc-read-dbg-byte"><span class="nav-number">7.2.5.</span> <span class="nav-text">idc.read_dbg_byte</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#idc-read-dbg-word"><span class="nav-number">7.2.6.</span> <span class="nav-text">idc.read_dbg_word</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#idc-read-dbg-dword"><span class="nav-number">7.2.7.</span> <span class="nav-text">idc.read_dbg_dword</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#idc-read-dbg-qword"><span class="nav-number">7.2.8.</span> <span class="nav-text">idc.read_dbg_qword</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E4%BD%8D%E7%BD%AE%E5%BC%80%E5%A7%8B%E7%9A%84bytes"><span class="nav-number">7.3.</span> <span class="nav-text">获取指定位置开始的bytes</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#idc-get-bytes"><span class="nav-number">7.3.1.</span> <span class="nav-text">idc.get_bytes</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%8C%87%E5%AE%9A%E4%BD%8D%E7%BD%AE%E7%9A%84%E5%80%BC"><span class="nav-number">7.4.</span> <span class="nav-text">修改指定位置的值</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#idaapi-patch-byte"><span class="nav-number">7.4.1.</span> <span class="nav-text">idaapi.patch_byte</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#idaapi-patch-word"><span class="nav-number">7.4.2.</span> <span class="nav-text">idaapi.patch_word</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#idaapi-patch-dword"><span class="nav-number">7.4.3.</span> <span class="nav-text">idaapi.patch_dword</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#idaapi-patch-qword"><span class="nav-number">7.4.4.</span> <span class="nav-text">idaapi.patch_qword</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%8C%87%E5%AE%9A%E4%BD%8D%E7%BD%AE%E5%BC%80%E5%A7%8B%E7%9A%84bytes"><span class="nav-number">7.5.</span> <span class="nav-text">修改指定位置开始的bytes</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#idaapi-patch-bytes"><span class="nav-number">7.5.1.</span> <span class="nav-text">idaapi.patch_bytes</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E8%AF%95"><span class="nav-number">8.</span> <span class="nav-text">调试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#idaapi-add-bpt"><span class="nav-number">8.1.</span> <span class="nav-text">idaapi.add_bpt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idaapi-continue-process"><span class="nav-number">8.2.</span> <span class="nav-text">idaapi.continue_process</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idaapi-wait-for-next-event"><span class="nav-number">8.3.</span> <span class="nav-text">idaapi.wait_for_next_event</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idc-set-bpt-cond"><span class="nav-number">8.4.</span> <span class="nav-text">idc.set_bpt_cond</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9D%82%E9%A1%B9"><span class="nav-number">9.</span> <span class="nav-text">杂项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#idaapi-set-cmt"><span class="nav-number">9.1.</span> <span class="nav-text">idaapi.set_cmt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idaapi-get-name"><span class="nav-number">9.2.</span> <span class="nav-text">idaapi.get_name</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idaapi-set-name"><span class="nav-number">9.3.</span> <span class="nav-text">idaapi.set_name</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#idc-get-name-ea-simple"><span class="nav-number">9.4.</span> <span class="nav-text">idc.get_name_ea_simple</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ihopenot"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ihopenot</p>
+  <div class="site-description" itemprop="description">is the random motion of particles suspended in a medium</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ihopenot" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ihopenot" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/984430652@qq.com" title="E-Mail → 984430652@qq.com" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ihopenot.github.io/2021/06/16/Idapython%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ihopenot">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ihopenot">
+      <meta itemprop="description" content="is the random motion of particles suspended in a medium">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Idapython常用命令 | Ihopenot">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Idapython常用命令
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-06-16 15:24:36" itemprop="dateCreated datePublished" datetime="2021-06-16T15:24:36+08:00">2021-06-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-08-24 22:46:22" itemprop="dateModified" datetime="2023-08-24T22:46:22+08:00">2023-08-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>idapython几乎所有api都有注解，在 path&#x2F;to&#x2F;your&#x2F;ida&#x2F;python&#x2F;2(3)&#x2F; 里面，这里只是做个快速索引。</p>
+<span id="more"></span>
+
+<h2 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h2><h3 id="ida-bytes-bin-search"><a href="#ida-bytes-bin-search" class="headerlink" title="ida_bytes.bin_search"></a>ida_bytes.bin_search</h3><blockquote>
+<p>​    bin_search(start_ea, end_ea, image, imask, step, flags) -&gt; ea_t<br>​    Search for a set of bytes in the program<br>​<br>​    @param start_ea: linear address, start of range to search<br>​    @param end_ea: linear address, end of range to search (exclusive)<br>​    @param image: the set of bytes to search for<br>​    @param imask: a bitfield representing the mask in ‘image’ (can be None)<br>​    @param step: either BIN_SEARCH_FORWARD, or BIN_SEARCH_BACKWARD<br>​    @param flags: combination of BIN_SEARCH_* flags<br>​    @return: the address of a match, or ida_idaapi.BADADDR if not found</p>
+</blockquote>
+<blockquote>
+<p>BIN_SEARCH_CASE &#x3D; _ida_bytes.BIN_SEARCH_CASE<br>“””<br>case sensitive<br>“””</p>
+<p>BIN_SEARCH_NOCASE &#x3D; _ida_bytes.BIN_SEARCH_NOCASE<br>“””<br>case insensitive<br>“””</p>
+<p>BIN_SEARCH_NOBREAK &#x3D; _ida_bytes.BIN_SEARCH_NOBREAK<br>“””<br>don’t check for Ctrl-Break<br>“””</p>
+<p>BIN_SEARCH_INITED &#x3D; _ida_bytes.BIN_SEARCH_INITED<br>“””<br>find_byte, find_byter: any initilized value<br>“””</p>
+<p>BIN_SEARCH_NOSHOW &#x3D; _ida_bytes.BIN_SEARCH_NOSHOW<br>“””<br>don’t show search progress or update screen<br>“””</p>
+<p>BIN_SEARCH_FORWARD &#x3D; _ida_bytes.BIN_SEARCH_FORWARD<br>“””<br>search forward for bytes<br>“””</p>
+<p>BIN_SEARCH_BACKWARD &#x3D; _ida_bytes.BIN_SEARCH_BACKWARD<br>“””<br>search backward for bytes<br>“””</p>
+</blockquote>
+<h2 id="Enum"><a href="#Enum" class="headerlink" title="Enum"></a>Enum</h2><h3 id="idaapi-add-enum"><a href="#idaapi-add-enum" class="headerlink" title="idaapi.add_enum"></a>idaapi.add_enum</h3><blockquote>
+<p>​    Add new enum type.if idx&#x3D;&#x3D; ‘BADADDR’ then add as the last idxif<br>​    name&#x3D;&#x3D;NULL then generate a unique name “enum_%d”<br>​<br>​    add_enum(idx, name, flag) -&gt; enum_t<br>​        @param idx (C++: size_t)<br>​        @param name (C++: const char *)<br>​        @param flag (C++: flags_t)</p>
+</blockquote>
+<blockquote>
+<p>idx - serial number of the new enum. If another enum with the same serial number exists, then all enums with serial numbers &gt;&#x3D; the specified idx get their serial numbers incremented (in other words, the new enum is put in the middle of the list of enums).<br>If idx &gt;&#x3D; get_enum_qty() or idx &#x3D;&#x3D; idaapi.BADNODE then the new enum is created at the end of the list of enums.</p>
+</blockquote>
+<blockquote>
+<p>name - name of the enum.</p>
+</blockquote>
+<blockquote>
+<p>flag - flags for representation of numeric constants in the definition of enum.</p>
+<p>不知道干啥的，好像没啥影响</p>
+</blockquote>
+<h3 id="idaapi-add-enum-member"><a href="#idaapi-add-enum-member" class="headerlink" title="idaapi.add_enum_member"></a>idaapi.add_enum_member</h3><blockquote>
+<p>Add member to enum type.</p>
+<p>add_enum_member(id, name, value, bmask&#x3D;(bmask_t(-1))) -&gt; int<br>    @param id (C++: enum_t)<br>    @param name (C++: const char *)<br>    @param value (C++: uval_t)<br>    @param bmask (C++: bmask_t)<br>    @return: 0 if ok, otherwise one of  Add enum member result codes</p>
+</blockquote>
+<blockquote>
+<p>id - 可以使用idaapi.get_enum(name)获取</p>
+</blockquote>
+<blockquote>
+<p>bmask - 一般使用 idaapi.DEFMASK</p>
+</blockquote>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><h3 id="idaapi-del-func"><a href="#idaapi-del-func" class="headerlink" title="idaapi.del_func"></a>idaapi.del_func</h3><blockquote>
+<p>Delete a function.</p>
+<p>del_func(ea) -&gt; bool<br>    @param ea: any address in the function entry chunk (C++: ea_t)<br>    @return: success</p>
+</blockquote>
+<h3 id="idaapi-add-func"><a href="#idaapi-add-func" class="headerlink" title="idaapi.add_func"></a>idaapi.add_func</h3><blockquote>
+<p>Add a new function. If the function end address is ‘BADADDR’ , then<br>IDA will try to determine the function bounds by calling<br>find_func_bounds(…, ‘FIND_FUNC_DEFINE’ ).</p>
+<p>add_func(ea1, ea2&#x3D;BADADDR) -&gt; bool<br>    @param ea1: start address (C++: ea_t)<br>    @param ea2: end address (C++: ea_t)<br>    @return: success</p>
+</blockquote>
+<h3 id="idaapi-create-insn"><a href="#idaapi-create-insn" class="headerlink" title="idaapi.create_insn"></a>idaapi.create_insn</h3><blockquote>
+<p>Create an instruction at the specified address. This function checks<br>if an instruction is present at the specified address and will try to<br>create one if there is none. It will fail if there is a data item or<br>other items hindering the creation of the new instruction. This<br>function will also fill the ‘out’ structure.</p>
+<p>create_insn(ea, out&#x3D;None) -&gt; int<br>    @param ea: linear address (C++: ea_t)<br>    @param out: the resulting instruction (C++: insn_t  *)<br>    @return: the length of the instruction or 0</p>
+</blockquote>
+<h3 id="idaapi-del-items"><a href="#idaapi-del-items" class="headerlink" title="idaapi.del_items"></a>idaapi.del_items</h3><blockquote>
+<p>Convert item (instruction&#x2F;data) to unexplored bytes. The whole item<br>(including the head and tail bytes) will be destroyed. It is allowed<br>to pass any address in the item to this function</p>
+<p>del_items(ea, flags&#x3D;0, nbytes&#x3D;1, may_destroy&#x3D;None) -&gt; bool<br>    @param ea: any address within the first item to delete (C++: ea_t)<br>    @param flags: combination of  Unexplored byte conversion flags (C++:<br>                  int)<br>    @param nbytes: number of bytes in the range to be undefined (C++:<br>                   asize_t)<br>    @param may_destroy: optional routine invoked before deleting a head<br>                        item. If callback returns false then item has not<br>                        to be deleted and operation fails (C++:<br>                        may_destroy_cb_t  *)<br>    @return: true on sucessful operation, otherwise false</p>
+</blockquote>
+<h2 id="交叉引用"><a href="#交叉引用" class="headerlink" title="交叉引用"></a>交叉引用</h2><h3 id="idautils-CodeRefsTo"><a href="#idautils-CodeRefsTo" class="headerlink" title="idautils.CodeRefsTo"></a>idautils.CodeRefsTo</h3><h3 id="idautils-CodeRefsFrom"><a href="#idautils-CodeRefsFrom" class="headerlink" title="idautils.CodeRefsFrom"></a>idautils.CodeRefsFrom</h3><blockquote>
+<p>Get a list of code references to(from) ‘ea’</p>
+<p>@param ea:   Target address<br>@param flow: Follow normal code flow or not<br>@type  flow: Boolean (0&#x2F;1, False&#x2F;True)</p>
+<p>@return: list of references (may be empty list)</p>
+<p>Example::<br>    for ref in CodeRefsTo(get_screen_ea(), 1):<br>        print(ref)</p>
+</blockquote>
+<h3 id="idautils-DataRefsTo"><a href="#idautils-DataRefsTo" class="headerlink" title="idautils.DataRefsTo"></a>idautils.DataRefsTo</h3><h3 id="idautils-DataRefsFrom"><a href="#idautils-DataRefsFrom" class="headerlink" title="idautils.DataRefsFrom"></a>idautils.DataRefsFrom</h3><blockquote>
+<p>Get a list of data references to(from) ‘ea’</p>
+<p>@param ea:   Target address</p>
+<p>@return: list of references (may be empty list)</p>
+<p>Example::<br>    for ref in DataRefsTo(get_screen_ea()):<br>        print(ref)</p>
+</blockquote>
+<h3 id="idautils-XrefsTo"><a href="#idautils-XrefsTo" class="headerlink" title="idautils.XrefsTo"></a>idautils.XrefsTo</h3><h3 id="idautils-XrefsFrom"><a href="#idautils-XrefsFrom" class="headerlink" title="idautils.XrefsFrom"></a>idautils.XrefsFrom</h3><blockquote>
+<p>Return all references to(from) address ‘ea’</p>
+<p>@param ea: Reference address<br>@param flags: one of ida_xref.XREF_ALL (default), ida_xref.XREF_FAR, ida_xref.XREF_DATA</p>
+<p>Example::<br>       for xref in XrefsTo(here(), 0):<br>           print(xref.type, XrefTypeName(xref.type), <br>                     ‘from’, hex(xref.frm), ‘to’, hex(xref.to))</p>
+</blockquote>
+<h3 id="idautils-XrefsTypeName"><a href="#idautils-XrefsTypeName" class="headerlink" title="idautils.XrefsTypeName"></a>idautils.XrefsTypeName</h3><blockquote>
+<p>Convert cross-reference type codes to readable names</p>
+<p>@param typecode: cross-reference type code</p>
+</blockquote>
+<h2 id="汇编"><a href="#汇编" class="headerlink" title="汇编"></a>汇编</h2><h3 id="idaapi-print-insn-mnem"><a href="#idaapi-print-insn-mnem" class="headerlink" title="idaapi.print_insn_mnem"></a>idaapi.print_insn_mnem</h3><blockquote>
+<p>Print instruction mnemonics.</p>
+<p>print_insn_mnem(ea) -&gt; str<br>    @param ea: linear address of the instruction (C++: ea_t)<br>    @return: success</p>
+</blockquote>
+<p>ea位置如果在ida中是undefined的话会读不出来，它不会去decode而是直接读asm出来。</p>
+<p>像这种<img src="/2021/06/16/Idapython%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/image-20210616202525303.png" alt="image-20210616202525303"></p>
+<h3 id="idc-GetDisasm"><a href="#idc-GetDisasm" class="headerlink" title="idc.GetDisasm"></a>idc.GetDisasm</h3><blockquote>
+<p>Get disassembly line</p>
+<p>@param ea: linear address of instruction</p>
+<p>@return: “” - could not decode instruction at the specified location</p>
+<p>@note: this function may not return exactly the same mnemonics<br>       as you see on the screen.</p>
+</blockquote>
+<p>就是获取ea位置的asm，如果是undefined的话会读出来 db 57h 这种东西，并且会读出来 <strong>;</strong> 后面的注释内容</p>
+<p>像这样<img src="/2021/06/16/Idapython%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/image-20210617153806003.png" alt="image-20210617153806003"></p>
+<h3 id="idaapi-decode-insn"><a href="#idaapi-decode-insn" class="headerlink" title="idaapi.decode_insn"></a>idaapi.decode_insn</h3><blockquote>
+<p>Analyze the specified address and fill ‘out’. This function does not<br>modify the database. It just tries to interpret the specified address<br>as an instruction and fills the ‘out’ structure.</p>
+<p>decode_insn(out, ea) -&gt; int<br>    @param out: the resulting instruction (C++: insn_t  *)<br>    @param ea: linear address (C++: ea_t)<br>    @return: the length of the (possible) instruction or 0</p>
+</blockquote>
+<p>解析ea出的机器码，输出到 out 指向的 insn_t 中，实际使用时 out 参数传入idaapi.insn_t()返回的一个对象，之后再通过这个对象去获取对应位置指令信息</p>
+<p>example：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ins = idaapi.insn_t()</span><br><span class="line">idaapi.decode_insn(ins, <span class="number">0x401000</span>) <span class="comment"># push r15</span></span><br><span class="line">ins.get_canon_mnem() <span class="comment"># return &#x27;push&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="idc-get-operand-type"><a href="#idc-get-operand-type" class="headerlink" title="idc.get_operand_type"></a>idc.get_operand_type</h3><blockquote>
+<p>Get type of instruction operand</p>
+<p>@param ea: linear address of instruction<br>@param n: number of operand:<br>    0 - the first operand<br>    1 - the second operand</p>
+<p>@return: any of o_* constants or -1 on error</p>
+</blockquote>
+<p>o_*定义再 idc 中</p>
+<blockquote>
+<p>o_void     &#x3D; ida_ua.o_void      # No Operand                           ———-<br>o_reg      &#x3D; ida_ua.o_reg       # General Register (al,ax,es,ds…)    reg<br>o_mem      &#x3D; ida_ua.o_mem       # Direct Memory Reference  (DATA)      addr<br>o_phrase   &#x3D; ida_ua.o_phrase    # Memory Ref [Base Reg + Index Reg]    phrase<br>o_displ    &#x3D; ida_ua.o_displ     # Memory Reg [Base Reg + Index Reg + Displacement] phrase+addr<br>o_imm      &#x3D; ida_ua.o_imm       # Immediate Value                      value<br>o_far      &#x3D; ida_ua.o_far       # Immediate Far Address  (CODE)        addr<br>o_near     &#x3D; ida_ua.o_near      # Immediate Near Address (CODE)        addr<br>o_idpspec0 &#x3D; ida_ua.o_idpspec0  # Processor specific type<br>o_idpspec1 &#x3D; ida_ua.o_idpspec1  # Processor specific type<br>o_idpspec2 &#x3D; ida_ua.o_idpspec2  # Processor specific type<br>o_idpspec3 &#x3D; ida_ua.o_idpspec3  # Processor specific type<br>o_idpspec4 &#x3D; ida_ua.o_idpspec4  # Processor specific type<br>o_idpspec5 &#x3D; ida_ua.o_idpspec5  # Processor specific type<br>                                                            # There can be more processor specific types</p>
+<p># x86</p>
+<p>o_trreg  &#x3D;       ida_ua.o_idpspec0      # trace register<br>o_dbreg  &#x3D;       ida_ua.o_idpspec1      # debug register<br>o_crreg  &#x3D;       ida_ua.o_idpspec2      # control register<br>o_fpreg  &#x3D;       ida_ua.o_idpspec3      # floating point register<br>o_mmxreg  &#x3D;      ida_ua.o_idpspec4      # mmx register<br>o_xmmreg  &#x3D;      ida_ua.o_idpspec5      # xmm register</p>
+<p># arm</p>
+<p>o_reglist  &#x3D;     ida_ua.o_idpspec1      # Register list (for LDM&#x2F;STM)<br>o_creglist  &#x3D;    ida_ua.o_idpspec2      # Coprocessor register list (for CDP)<br>o_creg  &#x3D;        ida_ua.o_idpspec3      # Coprocessor register (for LDC&#x2F;STC)<br>o_fpreglist  &#x3D;   ida_ua.o_idpspec4      # Floating point register list<br>o_text  &#x3D;        ida_ua.o_idpspec5      # Arbitrary text stored in the operand<br>o_cond  &#x3D;        (ida_ua.o_idpspec5+1)  # ARM condition as an operand</p>
+<p># ppc</p>
+<p>o_spr  &#x3D;         ida_ua.o_idpspec0      # Special purpose register<br>o_twofpr  &#x3D;      ida_ua.o_idpspec1      # Two FPRs<br>o_shmbme  &#x3D;      ida_ua.o_idpspec2      # SH &amp; MB &amp; ME<br>o_crf  &#x3D;         ida_ua.o_idpspec3      # crfield      x.reg<br>o_crb  &#x3D;         ida_ua.o_idpspec4      # crbit        x.reg<br>o_dcr  &#x3D;         ida_ua.o_idpspec5      # Device control register</p>
+</blockquote>
+<h3 id="idc-get-operand-value"><a href="#idc-get-operand-value" class="headerlink" title="idc.get_operand_value"></a>idc.get_operand_value</h3><blockquote>
+<p>Get number used in the operand</p>
+<p>This function returns an immediate number used in the operand</p>
+<p>@param ea: linear address of instruction<br>@param n: the operand number</p>
+<p>@return: value<br>    operand is an immediate value  &#x3D;&gt; immediate value<br>    operand has a displacement     &#x3D;&gt; displacement<br>    operand is a direct memory ref &#x3D;&gt; memory address<br>    operand is a register          &#x3D;&gt; register number<br>    operand is a register phrase   &#x3D;&gt; phrase number<br>    otherwise                      &#x3D;&gt; -1</p>
+</blockquote>
+<h3 id="idc-next-head"><a href="#idc-next-head" class="headerlink" title="idc.next_head"></a>idc.next_head</h3><blockquote>
+<p>Get next defined item (instruction or data) in the program</p>
+<p>@param ea: linear address to start search from<br>@param maxea: the search will stop at the address<br>    maxea is not included in the search range</p>
+<p>@return: BADADDR - no (more) defined items</p>
+</blockquote>
+<p>通常用于遍历下一条指令，对应的有prev_head</p>
+<h3 id="idc-print-operand"><a href="#idc-print-operand" class="headerlink" title="idc.print_operand"></a>idc.print_operand</h3><blockquote>
+<p>Get operand of an instruction or data</p>
+<p>@param ea: linear address of the item<br>@param n: number of operand:<br>    0 - the first operand<br>    1 - the second operand</p>
+<p>@return: the current text representation of operand or “”</p>
+</blockquote>
+<h2 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h2><h3 id="idc-get-strlit-contents"><a href="#idc-get-strlit-contents" class="headerlink" title="idc.get_strlit_contents"></a>idc.get_strlit_contents</h3><blockquote>
+<p>get_strlit_contents(ea, length &#x3D; -1, strtype &#x3D; STRTYPE_C)</p>
+<p>Get string contents<br>@param ea: linear address<br>@param length: string length. -1 means to calculate the max string length<br>@param strtype: the string type (one of STRTYPE_… constants)</p>
+<p>@return: string contents or empty string</p>
+</blockquote>
+<blockquote>
+<p># Character-terminated string. The termination characters<br># are kept in the next bytes of string type.<br>STRTYPE_TERMCHR   &#x3D; ida_nalt.STRTYPE_TERMCHR<br># C-style string.<br>STRTYPE_C         &#x3D; ida_nalt.STRTYPE_C<br># Zero-terminated 16bit chars<br>STRTYPE_C_16      &#x3D; ida_nalt.STRTYPE_C_16<br># Zero-terminated 32bit chars<br>STRTYPE_C_32      &#x3D; ida_nalt.STRTYPE_C_32<br># Pascal-style, one-byte length prefix<br>STRTYPE_PASCAL    &#x3D; ida_nalt.STRTYPE_PASCAL<br># Pascal-style, 16bit chars, one-byte length prefix<br>STRTYPE_PASCAL_16 &#x3D; ida_nalt.STRTYPE_PASCAL_16<br># Pascal-style, two-byte length prefix<br>STRTYPE_LEN2      &#x3D; ida_nalt.STRTYPE_LEN2<br># Pascal-style, 16bit chars, two-byte length prefix<br>STRTYPE_LEN2_16   &#x3D; ida_nalt.STRTYPE_LEN2_16<br># Pascal-style, four-byte length prefix<br>STRTYPE_LEN4      &#x3D; ida_nalt.STRTYPE_LEN4<br># Pascal-style, 16bit chars, four-byte length prefix<br>STRTYPE_LEN4_16   &#x3D; ida_nalt.STRTYPE_LEN4_16</p>
+<p># alias<br>STRTYPE_C16       &#x3D; STRTYPE_C_16</p>
+</blockquote>
+<h3 id="获取指定位置值"><a href="#获取指定位置值" class="headerlink" title="获取指定位置值"></a>获取指定位置值</h3><h4 id="idaapi-get-byte"><a href="#idaapi-get-byte" class="headerlink" title="idaapi.get_byte"></a>idaapi.get_byte</h4><h4 id="idaapi-get-word"><a href="#idaapi-get-word" class="headerlink" title="idaapi.get_word"></a>idaapi.get_word</h4><h4 id="idaapi-get-dword"><a href="#idaapi-get-dword" class="headerlink" title="idaapi.get_dword"></a>idaapi.get_dword</h4><h4 id="idaapi-get-qword"><a href="#idaapi-get-qword" class="headerlink" title="idaapi.get_qword"></a>idaapi.get_qword</h4><blockquote>
+<p>Get one byte (8-bit) of the program at ‘ea’ from the database. Works<br>even if the debugger is active. See also ‘get_dbg_byte()’ to read the<br>process memory directly. This function works only for 8bit byte<br>processors.</p>
+<p>get_db_byte(ea) -&gt; uchar<br>    @param ea (C++: ea_t)</p>
+</blockquote>
+<p>不使用调试过程中的值。</p>
+<h4 id="idc-read-dbg-byte"><a href="#idc-read-dbg-byte" class="headerlink" title="idc.read_dbg_byte"></a>idc.read_dbg_byte</h4><h4 id="idc-read-dbg-word"><a href="#idc-read-dbg-word" class="headerlink" title="idc.read_dbg_word"></a>idc.read_dbg_word</h4><h4 id="idc-read-dbg-dword"><a href="#idc-read-dbg-dword" class="headerlink" title="idc.read_dbg_dword"></a>idc.read_dbg_dword</h4><h4 id="idc-read-dbg-qword"><a href="#idc-read-dbg-qword" class="headerlink" title="idc.read_dbg_qword"></a>idc.read_dbg_qword</h4><blockquote>
+<p>Get value of program byte using the debugger memory</p>
+<p>@param ea: linear address<br>@return: The value or None on failure.</p>
+</blockquote>
+<p>使用调试过程中的值。</p>
+<h3 id="获取指定位置开始的bytes"><a href="#获取指定位置开始的bytes" class="headerlink" title="获取指定位置开始的bytes"></a>获取指定位置开始的bytes</h3><h4 id="idc-get-bytes"><a href="#idc-get-bytes" class="headerlink" title="idc.get_bytes"></a>idc.get_bytes</h4><blockquote>
+<p>get_bytes(ea, size, use_dbg &#x3D; False)<br>Return the specified number of bytes of the program<br>@param ea: linear address<br>@param size: size of buffer in normal 8-bit bytes<br>@param use_dbg: if True, use debugger memory, otherwise just the database<br>@return: None on failure<br>         otherwise a string containing the read bytes</p>
+</blockquote>
+<h3 id="修改指定位置的值"><a href="#修改指定位置的值" class="headerlink" title="修改指定位置的值"></a>修改指定位置的值</h3><h4 id="idaapi-patch-byte"><a href="#idaapi-patch-byte" class="headerlink" title="idaapi.patch_byte"></a>idaapi.patch_byte</h4><h4 id="idaapi-patch-word"><a href="#idaapi-patch-word" class="headerlink" title="idaapi.patch_word"></a>idaapi.patch_word</h4><h4 id="idaapi-patch-dword"><a href="#idaapi-patch-dword" class="headerlink" title="idaapi.patch_dword"></a>idaapi.patch_dword</h4><h4 id="idaapi-patch-qword"><a href="#idaapi-patch-qword" class="headerlink" title="idaapi.patch_qword"></a>idaapi.patch_qword</h4><blockquote>
+<p>Patch a byte of the program. The original value of the byte is saved<br>and can be obtained by ‘get_original_byte()’ . This function works for<br>wide byte processors too.</p>
+<p>patch_byte(ea, x) -&gt; bool<br>    @param ea (C++: ea_t)<br>    @param x (C++: uint64)<br>    @retval: true - the database has been modified,<br>    @retval: false - the debugger is running and the process’ memory has<br>                     value ‘x’ at address ‘ea’, or the debugger is not<br>                     running, and the IDB has value ‘x’ at address ‘ea<br>                     already.</p>
+</blockquote>
+<h3 id="修改指定位置开始的bytes"><a href="#修改指定位置开始的bytes" class="headerlink" title="修改指定位置开始的bytes"></a>修改指定位置开始的bytes</h3><h4 id="idaapi-patch-bytes"><a href="#idaapi-patch-bytes" class="headerlink" title="idaapi.patch_bytes"></a>idaapi.patch_bytes</h4><blockquote>
+<p>Patch the specified number of bytes of the program. Original values of<br>bytes are saved and are available with get_original…() functions.<br>See also ‘put_bytes()’ .</p>
+<p>patch_bytes(ea, buf)<br>    @param ea: linear address (C++: ea_t)<br>    @param buf: buffer with new values of bytes (C++: const void *)</p>
+</blockquote>
+<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><h3 id="idaapi-add-bpt"><a href="#idaapi-add-bpt" class="headerlink" title="idaapi.add_bpt"></a>idaapi.add_bpt</h3><blockquote>
+<p>Add a new breakpoint in the debugged process. \sq{Type, Synchronous<br>function - available as request, Notification, none (synchronous<br>function)}Only one breakpoint can exist at a given address.</p>
+<p>add_bpt(ea, size&#x3D;0, type&#x3D;BPT_DEFAULT) -&gt; bool<br>    @param ea: any address in the process memory space. Depending on the<br>               architecture, hardware breakpoints always be setup at<br>               random address. For example, on x86, hardware breakpoints<br>               should be aligned depending on their size. Moreover, on the<br>               x86 architecture, it is impossible to setup more than 4<br>               hardware breakpoints. (C++: ea_t)<br>    @param size: size of the breakpoint (irrelevant for software<br>                 breakpoints): As for the address, hardware breakpoints<br>                 can’t always be setup with random size. (C++: asize_t)<br>    @param type: type of the breakpoint ( BPT_SOFT  for software<br>                 breakpoint) special case  BPT_DEFAULT  ( BPT_SOFT |<br>                 BPT_EXEC ): try to add instruction breakpoint of the<br>                 appropriate type as follows: software bpt if supported,<br>                 hwbpt otherwise (C++: bpttype_t)</p>
+<p>add_bpt(bpt) -&gt; bool<br>    bpt: bpt_t const &amp;</p>
+</blockquote>
+<blockquote>
+<p>BPT_WRITE &#x3D; cvar.BPT_WRITE<br>BPT_READ &#x3D; cvar.BPT_READ<br>BPT_RDWR &#x3D; cvar.BPT_RDWR<br>BPT_SOFT &#x3D; cvar.BPT_SOFT<br>BPT_EXEC &#x3D; cvar.BPT_EXEC<br>BPT_DEFAULT &#x3D; cvar.BPT_DEFAULT</p>
+</blockquote>
+<h3 id="idaapi-continue-process"><a href="#idaapi-continue-process" class="headerlink" title="idaapi.continue_process"></a>idaapi.continue_process</h3><blockquote>
+<p>idaapi.continue_process()</p>
+<p>Continue the execution of the process in the debugger. \sq{Type,<br>Synchronous function - available as Request, Notification, none<br>(synchronous function)}The ‘continue_process()’ function can be called<br>from a notification handler to force the continuation of the process.<br>In this case the request queue will not be examined, IDA will simply<br>resume execution. Usually it makes sense to call<br>‘request_continue_process()’ followed by ‘run_requests()’ , so that<br>IDA will first start a queued request (if any) and then resume the<br>application.</p>
+</blockquote>
+<h3 id="idaapi-wait-for-next-event"><a href="#idaapi-wait-for-next-event" class="headerlink" title="idaapi.wait_for_next_event"></a>idaapi.wait_for_next_event</h3><blockquote>
+<p>Wait for the next event.This function (optionally) resumes the process<br>execution, and waits for a debugger event until a possible timeout<br>occurs.</p>
+<p>wait_for_next_event(wfne, timeout) -&gt; dbg_event_code_t<br>    @param wfne: combination of  Wait for debugger event flags  constants<br>                 (C++: int)<br>    @param timeout: number of seconds to wait, -1-infinity (C++: int)<br>    @return: either an event_id_t (if &gt; 0), or a dbg_event_code_t (if &lt;&#x3D;<br>             0)</p>
+</blockquote>
+<blockquote>
+<p>WFNE_ANY &#x3D; _ida_dbg.WFNE_ANY<br>“””<br>return the first event (even if it doesn’t suspend the process)<br>“””</p>
+<p>WFNE_SUSP &#x3D; _ida_dbg.WFNE_SUSP<br>“””<br>wait until the process gets suspended<br>“””</p>
+<p>WFNE_SILENT &#x3D; _ida_dbg.WFNE_SILENT<br>“””<br>1: be slient, 0:display modal boxes if necessary<br>“””</p>
+<p>WFNE_CONT &#x3D; _ida_dbg.WFNE_CONT<br>“””<br>continue from the suspended state<br>“””</p>
+<p>WFNE_NOWAIT &#x3D; _ida_dbg.WFNE_NOWAIT<br>“””<br>(to be used with ‘WFNE_CONT’ )</p>
+<p>do not wait for any event, immediately return ‘DEC_TIMEOUT’<br>“””</p>
+<p>WFNE_USEC &#x3D; _ida_dbg.WFNE_USEC<br>“””<br>(minimum non-zero timeout is 40000us)</p>
+<p>timeout is specified in microseconds<br>“””</p>
+</blockquote>
+<p>如果希望程序运行到下一个断点可以这样写：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># continue process，并且等待下一次suspended</span></span><br><span class="line">idaapi.wait_for_next_event(idaapi.WFNE_SUSP | idaapi.WFNE_CONT, -<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="idc-set-bpt-cond"><a href="#idc-set-bpt-cond" class="headerlink" title="idc.set_bpt_cond"></a>idc.set_bpt_cond</h3><blockquote>
+<p>Set breakpoint condition</p>
+<p>@param ea: any address in the breakpoint range<br>@param cnd: breakpoint condition<br>@param is_lowcnd: 0 - regular condition, 1 - low level condition</p>
+<p>@return: success</p>
+</blockquote>
+<p>可以设置断点为条件断点，并且设置condition，但是无法从这里设置condition的语言，默认是IDC</p>
+<p>目前我还没有找到比较优雅的直接设置python条件断点的方式，只能硬改 bpt_t 中的 elang 来改</p>
+<p>example：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 设置python条件断点</span><br><span class="line">bpt = idaapi.get_bpt(ea)</span><br><span class="line">bpt.elang = &quot;Python&quot; # or &quot;IDC&quot;</span><br><span class="line">bpt.condition = &quot;print(&#x27;Hello World&#x27;)&quot; # 或者再add_bpt之后使用set_bpt_cond改</span><br><span class="line">idaapi.del_bpt(ea)</span><br><span class="line">idaapi.add_bpt(bpt)</span><br></pre></td></tr></table></figure>
+
+<h2 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h2><h3 id="idaapi-set-cmt"><a href="#idaapi-set-cmt" class="headerlink" title="idaapi.set_cmt"></a>idaapi.set_cmt</h3><blockquote>
+<p>Set an indented comment.</p>
+<p>set_cmt(ea, comm, rptble) -&gt; bool<br>    @param ea: linear address (C++: ea_t)<br>    @param comm: comment string   nullptr: do nothing (return 0)   “” :<br>                 delete comment (C++: const char *)<br>    @param rptble: is repeatable? (C++: bool)<br>    @return: success</p>
+</blockquote>
+<h3 id="idaapi-get-name"><a href="#idaapi-get-name" class="headerlink" title="idaapi.get_name"></a>idaapi.get_name</h3><blockquote>
+<p>get_name(ea) -&gt; qstring<br>    @param ea (C++: ea_t)</p>
+</blockquote>
+<h3 id="idaapi-set-name"><a href="#idaapi-set-name" class="headerlink" title="idaapi.set_name"></a>idaapi.set_name</h3><blockquote>
+<p>Set or delete name of an item at the specified address. An item can be<br>anything: instruction, function, data byte, word, string, structure,<br>etc… Include name into the list of names.</p>
+<p>set_name(ea, name, flags&#x3D;0) -&gt; bool<br>    @param ea: linear address. do nothing if ea is not valid (return 0).<br>               tail bytes can’t have names. (C++: ea_t)<br>    @param name: new name.   NULL: do nothing (return 0).   “” : delete<br>                 name.   otherwise this is a new name. (C++: const char *)<br>    @param flags: Set name flags . If a bit is not specified, then the<br>                  corresponding action is not performed and the name will<br>                  retain the same bits as before calling this function.<br>                  For new names, default is: non-public, non-weak, non-<br>                  auto. (C++: int)<br>    @retval: 1 - ok, name is changed<br>    @retval: 0 - failure, a warning is displayed</p>
+</blockquote>
+<h3 id="idc-get-name-ea-simple"><a href="#idc-get-name-ea-simple" class="headerlink" title="idc.get_name_ea_simple"></a>idc.get_name_ea_simple</h3><blockquote>
+<p>Get linear address of a name</p>
+<p>@param name: name of program byte</p>
+<p>@return: address of the name<br>         BADADDR - No such name</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91/" rel="tag"># 逆向</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/05/28/%E6%B4%A5%E9%97%A8%E6%9D%AF2021Writeup/" rel="prev" title="津门杯2021Writeup">
+                  <i class="fa fa-angle-left"></i> 津门杯2021Writeup
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/03/31/dnSpy%E8%B0%83%E8%AF%95Unity%E7%A8%8B%E5%BA%8F/" rel="next" title="dnSpy调试Unity程序">
+                  dnSpy调试Unity程序 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ihopenot</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/ihopenot" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

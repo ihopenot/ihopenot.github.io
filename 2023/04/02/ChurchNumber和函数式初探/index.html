@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ihopenot.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="前言挺早就在ctf里见到有关lambda表达式来出题，当时啥也不懂，就xjb调一调，弄一弄，猜一猜还真给做出来了。大概之后又过了几个月又见到lambda的题了，那次好好研究了一下，最后做出来了，也感受到了函数式编程的妙，以及了解了邱奇数和邱奇布尔值的一些知识，当时很自信，感觉会了。然后再xctf上就被lambda revenge暴打了，看了一天没做出来，赛后放源码看了看，发现自己还是太naive，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ChurchNumber和函数式初探">
+<meta property="og:url" content="https://ihopenot.github.io/2023/04/02/ChurchNumber%E5%92%8C%E5%87%BD%E6%95%B0%E5%BC%8F%E5%88%9D%E6%8E%A2/index.html">
+<meta property="og:site_name" content="Ihopenot">
+<meta property="og:description" content="前言挺早就在ctf里见到有关lambda表达式来出题，当时啥也不懂，就xjb调一调，弄一弄，猜一猜还真给做出来了。大概之后又过了几个月又见到lambda的题了，那次好好研究了一下，最后做出来了，也感受到了函数式编程的妙，以及了解了邱奇数和邱奇布尔值的一些知识，当时很自信，感觉会了。然后再xctf上就被lambda revenge暴打了，看了一天没做出来，赛后放源码看了看，发现自己还是太naive，">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-04-02T06:45:54.000Z">
+<meta property="article:modified_time" content="2023-08-24T14:35:04.000Z">
+<meta property="article:author" content="Ihopenot">
+<meta property="article:tag" content="函数式编程">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ihopenot.github.io/2023/04/02/ChurchNumber%E5%92%8C%E5%87%BD%E6%95%B0%E5%BC%8F%E5%88%9D%E6%8E%A2/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ihopenot.github.io/2023/04/02/ChurchNumber%E5%92%8C%E5%87%BD%E6%95%B0%E5%BC%8F%E5%88%9D%E6%8E%A2/","path":"2023/04/02/ChurchNumber和函数式初探/","title":"ChurchNumber和函数式初探"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ChurchNumber和函数式初探 | Ihopenot</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ihopenot</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Brownian motion</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">6</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">13</span></a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">函数式编程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%AF%E9%87%8C%E5%8C%96"><span class="nav-number">2.1.</span> <span class="nav-text">柯里化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ChurchNumber"><span class="nav-number">3.</span> <span class="nav-text">ChurchNumber</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%82%B1%E5%A5%87%E6%95%B0"><span class="nav-number">3.1.</span> <span class="nav-text">邱奇数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%82%B1%E5%A5%87%E6%95%B0%E7%9A%84%E8%BF%90%E7%AE%97"><span class="nav-number">3.2.</span> <span class="nav-text">邱奇数的运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%82%B1%E5%A5%87%E5%B8%83%E5%B0%94%E5%80%BC"><span class="nav-number">3.3.</span> <span class="nav-text">邱奇布尔值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%82%B1%E5%A5%87%E5%B8%83%E5%B0%94%E5%80%BC%E7%9A%84%E8%BF%90%E7%AE%97"><span class="nav-number">3.4.</span> <span class="nav-text">邱奇布尔值的运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%BC%8F%E8%BF%90%E7%AE%97"><span class="nav-number">3.5.</span> <span class="nav-text">函数式运算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#IsZero"><span class="nav-number">3.5.1.</span> <span class="nav-text">IsZero</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pair"><span class="nav-number">3.5.2.</span> <span class="nav-text">Pair</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#List"><span class="nav-number">3.5.3.</span> <span class="nav-text">List</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%A6%E4%B8%80%E7%A7%8D%E5%87%8F%E6%B3%95"><span class="nav-number">3.5.4.</span> <span class="nav-text">另一种减法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IsEqual"><span class="nav-number">3.5.5.</span> <span class="nav-text">IsEqual</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Y-Combinator"><span class="nav-number">3.5.6.</span> <span class="nav-text">Y Combinator</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E8%A1%A8"><span class="nav-number">4.</span> <span class="nav-text">总表</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ihopenot"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ihopenot</p>
+  <div class="site-description" itemprop="description">is the random motion of particles suspended in a medium</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ihopenot" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ihopenot" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/984430652@qq.com" title="E-Mail → 984430652@qq.com" rel="noopener me"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ihopenot.github.io/2023/04/02/ChurchNumber%E5%92%8C%E5%87%BD%E6%95%B0%E5%BC%8F%E5%88%9D%E6%8E%A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ihopenot">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ihopenot">
+      <meta itemprop="description" content="is the random motion of particles suspended in a medium">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ChurchNumber和函数式初探 | Ihopenot">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ChurchNumber和函数式初探
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-04-02 14:45:54" itemprop="dateCreated datePublished" datetime="2023-04-02T14:45:54+08:00">2023-04-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-08-24 22:35:04" itemprop="dateModified" datetime="2023-08-24T22:35:04+08:00">2023-08-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>挺早就在ctf里见到有关lambda表达式来出题，当时啥也不懂，就xjb调一调，弄一弄，猜一猜还真给做出来了。大概之后又过了几个月又见到lambda的题了，那次好好研究了一下，最后做出来了，也感受到了函数式编程的妙，以及了解了邱奇数和邱奇布尔值的一些知识，当时很自信，感觉会了。然后再xctf上就被lambda revenge暴打了，看了一天没做出来，赛后放源码看了看，发现自己还是太naive，这里稍微做些总结，免得下次再有lambda的题到处去搜表达式。</p>
+<p>因为lambda表达式有很多种写法，这里统一使用python代码作为表示形式，感觉比较工程。</p>
+<h1 id="函数式编程"><a href="#函数式编程" class="headerlink" title="函数式编程"></a>函数式编程</h1><p>在函数式编程的世界里，函数被视为一等公民。这一概念在许多地方都能看到，所以不再赘述。从我自己的感受来说，函数式编程中的所有事物都可以看作是一个过程，或者也可以称之为函数。只有当我们向这个函数传入具体的参数时，这个过程才会产生一个结果。</p>
+<p>在函数式编程中，一个函数的输入和输出都可能是另一个函数。这使得复杂的过程可以被拆分成简单函数的组合。换句话说，一个复杂的功能函数可以被拆分成许多底层的简单函数。整个过程在传入具体值之前可能没有实际意义，又或者根据传入的函数不同会有不同的功能。这种拆分和组合为函数式编程带来了强大的表达能力和灵活性。</p>
+<span id="more"></span>
+
+<h2 id="柯里化"><a href="#柯里化" class="headerlink" title="柯里化"></a>柯里化</h2><p>柯里化是一种把函数标准化的方式，有的函数可能接收很多参数，柯里化就是将这种接收很多参数的函数变为接收一个参数的函数。</p>
+<p>例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 未柯里化</span></span><br><span class="line">add = <span class="keyword">lambda</span> x, y: x+y</span><br><span class="line"><span class="keyword">assert</span> add(<span class="number">1</span>, <span class="number">2</span>) == <span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 柯里化</span></span><br><span class="line">add_k = <span class="keyword">lambda</span> x: <span class="keyword">lambda</span> y: x+y</span><br><span class="line"><span class="keyword">assert</span> add(<span class="number">1</span>)(<span class="number">2</span>) == <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<p>add函数是一个接收两个参数的函数，柯里化后的add_k函数是接收一个参数的函数。实际上add_k在接收到第一个参数后会返回一个<em>接收一个参数的函数</em>，这个时候再将第二个参数传入才会最终执行加法。</p>
+<p>柯里化之后的lambda表达式更容易处理，下文的所有式子也都是柯里化后的表达式。</p>
+<h1 id="ChurchNumber"><a href="#ChurchNumber" class="headerlink" title="ChurchNumber"></a>ChurchNumber</h1><h2 id="邱奇数"><a href="#邱奇数" class="headerlink" title="邱奇数"></a>邱奇数</h2><p>邱奇数是定义在函数上的一类数，它本身也是一个函数，可以传入参数。</p>
+<p>邱奇数的前几个数定义如下：</p>
+<p><code>ZERO = lambda f: lambda x: x</code></p>
+<p><code>ONE = lambda f: lambda x: f(x)</code></p>
+<p><code>TWO = lambda f: lambda x: f(f(x))</code></p>
+<p>简单来说，如果<code>x</code>外部套<code>c</code>了层<code>f</code>，这个表达式对应的数字就是<code>c</code>。</p>
+<p>可以使用函数来将邱奇数转换成对应的整数，只要传入<code>f = lambda n: n+1</code>和<code>x = 0</code>，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">f = <span class="keyword">lambda</span> n: n+<span class="number">1</span></span><br><span class="line">x = <span class="number">0</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">to_num</span>(<span class="params">church</span>):</span><br><span class="line">    <span class="keyword">return</span> church(f)(x)</span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> to_num(ZERO) == <span class="number">0</span></span><br><span class="line"><span class="keyword">assert</span> to_num(ONE) == <span class="number">1</span></span><br><span class="line"><span class="keyword">assert</span> to_num(TWO) == <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="邱奇数的运算"><a href="#邱奇数的运算" class="headerlink" title="邱奇数的运算"></a>邱奇数的运算</h2><p>有了数的定义，接下来是一些运算的定义：</p>
+<p>后继： <code>SUCC = lambda n: lambda f: lambda x: f(n(f)(x)) </code></p>
+<p>这个式子相当于再<code>n</code>外面再套了一层<code>f</code>，所以结果是<code>n+1</code>。</p>
+<p>加法：<code>ADD = lambda n: lambda m: lambda f: lambda x: m(f)(n(f)(x))</code></p>
+<p>这个式子相当于把<code>m</code>最里面的<code>x</code>替换成了<code>n</code>，所以结果是<code>n+m</code>。</p>
+<p>乘法：<code>MUL = lambda n: lambda m: lambda f: lambda x: m(n(f))(x)</code></p>
+<p>这个式子相当于把<code>m</code>里面的<code>f</code>替换成了<code>n</code>个<code>f</code>，所以结果是<code>n*m</code>。</p>
+<p>指数：<code>EXP = lambda n: lambda m: lambda f: lambda x: n(m)(f)(x)</code></p>
+<p>这个式子稍微化一下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lambda n: lambda m: lambda f: lambda x: n(m)(f)(x)</span><br><span class="line">	=&gt; lambda n: lambda m: lambda f: lambda x: (n(m)(f))(x)				// 将m和f带入n</span><br><span class="line">	=&gt; lambda n: lambda m: lambda f: lambda x: m(m(...m(f)))(x) 		// n个m</span><br><span class="line">	=&gt; lambda n: lambda m: lambda f: lambda x: MUL(m, MUL(m, ...))(x) 	// 根据乘法规则化简</span><br></pre></td></tr></table></figure>
+
+<p>所以结果是<code>m**n</code></p>
+<p>前驱：<code>PRED = lambda n: lambda f: lambda x: n(lambda g: lambda h: h(g(f)))(lambda h: x)(lambda h: h)</code></p>
+<p>好像没啥简便的证法，最后结果是<code>n-1</code>。需要注意的是<code>PRED(ZERO)</code>结果还是<code>ZERO</code>。</p>
+<p>减法：<code>SUB = lambda n: lambda m: n(PRED)(m)</code></p>
+<p>一种naive的想法是直接运行<code>n</code>次<code>PRED</code>，由于church数的定义就是将<code>f</code>运行<code>n</code>次，所以<code>m-n</code>可以简单地定义为<code>n(PRED)(m)</code>，同理，当<code>m-n&lt;0</code>的时候会返回<code>ZERO</code>。</p>
+<p>除法：太复杂了。。</p>
+<h2 id="邱奇布尔值"><a href="#邱奇布尔值" class="headerlink" title="邱奇布尔值"></a>邱奇布尔值</h2><p>简单定义一下<code>True</code>和<code>False</code></p>
+<p><code>TRUE = lambda x: lambda y: x</code></p>
+<p><code>FALSE = lambda x: lambda y: y</code></p>
+<p><code>True</code>和<code>False</code>区别在于选择第一个参数还是第二个参数。</p>
+<h2 id="邱奇布尔值的运算"><a href="#邱奇布尔值的运算" class="headerlink" title="邱奇布尔值的运算"></a>邱奇布尔值的运算</h2><p>与：<code>AND = lambda x: lambda y: x(y)(x)</code></p>
+<p>如果<code>x</code>为真则返回<code>y</code>，否则返回<code>x</code>，所以结果是<code>x and y</code>。</p>
+<p>或：<code>OR = lambda x: lambda y: x(x)(y)</code></p>
+<p>如果<code>x</code>为真则返回<code>x</code>，否则返回<code>y</code>，所以结果是<code>x or y</code>。</p>
+<p>非：<code>NOT = lambda x: x(FALSE)(TRUE)</code> 或者 <code>NOT = lambda n: lambda x: lambda y: n(y)(x)</code></p>
+<p>条件判断：<code>IF = lambda n: lambda x: lambda y: n(x)(y)</code></p>
+<p>如果<code>n</code>为真则返回<code>x</code>，否则返回<code>y</code>。</p>
+<p>布尔运算相对简单，也很容易推导。</p>
+<h2 id="函数式运算"><a href="#函数式运算" class="headerlink" title="函数式运算"></a>函数式运算</h2><p>这一部分相当杂项，而且很多定义也并不唯一。</p>
+<h3 id="IsZero"><a href="#IsZero" class="headerlink" title="IsZero"></a>IsZero</h3><p>永假表达式：<code>ALWAYS_FALSE = lambda x: FALSE</code></p>
+<p>判断是否为0：<code>ISZERO = lambda n: n(ALWAYS_FALSE)(TRUE)</code></p>
+<p>只有当<code>n == ZERO</code>的时候<code>ISZERO</code>会返回<code>TRUE</code>。</p>
+<h3 id="Pair"><a href="#Pair" class="headerlink" title="Pair"></a>Pair</h3><p>定义pair：<code>PAIR = lambda x: lambda y: lambda b: b(x)(y)</code></p>
+<p><code>PAIR</code>操作定义了一个二元组，首先传入二元组中的两个元素<code>x</code>和<code>y</code>，之后根据传入的<code>b</code>决定返回<code>x</code>还是<code>y</code>。</p>
+<p>有了<code>PAIR</code>我们可以继续定义<code>FIRST</code>和<code>SECOND</code>操作，分别对应从pair中取出第一个元素和第二个元素。</p>
+<p>first操作：<code>FIRST = lambda p: p(TRUE)</code></p>
+<p>first操作：<code>SECOND = lambda p: p(FALSE)</code></p>
+<p>用法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">p = PAIR(ONE)(TWO)</span><br><span class="line"><span class="keyword">assert</span> FIRST(p) == ONE</span><br><span class="line"><span class="keyword">assert</span> SECOND(p) == TWO</span><br></pre></td></tr></table></figure>
+
+<h3 id="List"><a href="#List" class="headerlink" title="List"></a>List</h3><p>接下来定义list，list是一个pair的嵌套，以Null结尾。</p>
+<p>为了定义list，我们先要定义Null和判断是否为Null。</p>
+<p>Null：<code>NULL = lambda x: TRUE</code></p>
+<p>判断是否为Null：<code>ISNULL = lambda v: v(lambda x: lambda y: FALSE)</code></p>
+<p>判断是否为Null只能在list中使用，更准确的说，传入的<code>v</code>必须是<code>NULL</code>或者是<em>接收两个参数的函数</em>。</p>
+<h3 id="另一种减法"><a href="#另一种减法" class="headerlink" title="另一种减法"></a>另一种减法</h3><p>使用pair实现pred操作，需要首先定义一个函数next。</p>
+<p>next：<code>_NEXT = lambda x: PAIR(SECOND(x))(SUCC(SECOND(x)))</code></p>
+<p>如果传入的是<code>(x-1, x)</code>则会返回<code>(x, x+1)</code>。</p>
+<p>在这个基础上实现的pred操作。</p>
+<p>pred：<code>_PRED = lambda n: FIRST(n(_NEXT)(PAIR(ZERO)(ZERO))) </code></p>
+<p>由于church数的定义，<code>n(_NEXT)(PAIR(ZERO)(ZERO))</code>实际上就是在<code>(0, 0)</code>的基础上调用<code>n</code>次<code>_NEXT</code>，所以最后<code>FIRST</code>出来的结果就是<code>n-1</code>。</p>
+<p>与church数的减法类似，也可以定义新的减法操作。</p>
+<p>sub：<code>_SUB = lambda n: lambda m: n(_PRED)(m)</code></p>
+<p>结果为<code>m-n</code>。</p>
+<h3 id="IsEqual"><a href="#IsEqual" class="headerlink" title="IsEqual"></a>IsEqual</h3><p>判断相等：<code>EQ = lambda n: lambdam: AND(ISZERO(SUB(n)(m)))(ISZERO(SUB(m)(n)))</code></p>
+<h3 id="Y-Combinator"><a href="#Y-Combinator" class="headerlink" title="Y Combinator"></a>Y Combinator</h3><p>Y Combinator：<code>YCOMB = lambda f: (lambda x: f(x(x)))(lambda x: f(x(x))) </code></p>
+<p>可以用来实现递归。</p>
+<p>示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">fib = <span class="keyword">lambda</span> f: <span class="keyword">lambda</span> n: n <span class="keyword">if</span> n &lt; <span class="number">2</span> <span class="keyword">else</span> f(n-<span class="number">1</span>) + f(n-<span class="number">2</span>)</span><br><span class="line"><span class="keyword">assert</span> YCOMB(fib)(<span class="number">7</span>) == <span class="number">13</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 简单证明</span></span><br><span class="line"><span class="comment"># YCOMB(FUNC) = (lambda x: FUNC(x(x)))(lambda x: FUNC(x(x)))</span></span><br><span class="line"><span class="comment"># 		=&gt; FUNC(lambda x: FUNC(x(x)))(lambda x: FUNC(x(x)))</span></span><br><span class="line"><span class="comment">#		=&gt; FUNC(YCOMB(FUNC))</span></span><br><span class="line"><span class="comment"># 代入YCOMB(fib)(7)可以理解的更深一些</span></span><br></pre></td></tr></table></figure>
+
+<p>上面这个东西在python里跑会直接爆栈，可能是python求值策略导致无限展开了。</p>
+<p>不过有个替代品<code>ZCOMP</code>可以用：<code>ZCOMP = lambda f: (lambda x: (lambda m: f(x(x))(m)))(lambda x: (lambda m: f(x(x))(m)))</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">assert</span> ZCOMP(fib)(<span class="number">7</span>) == <span class="number">13</span></span><br></pre></td></tr></table></figure>
+
+<p>可以使用递归和<code>ISNULL</code>判断来实现list遍历。</p>
+<h1 id="总表"><a href="#总表" class="headerlink" title="总表"></a>总表</h1><p>一键导入lambda函数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">ZERO = <span class="keyword">lambda</span> f: <span class="keyword">lambda</span> x: x</span><br><span class="line">SUCC = <span class="keyword">lambda</span> n: <span class="keyword">lambda</span> f: <span class="keyword">lambda</span> x: f(n(f)(x))</span><br><span class="line">ADD = <span class="keyword">lambda</span> n: <span class="keyword">lambda</span> m: <span class="keyword">lambda</span> f: <span class="keyword">lambda</span> x: m(f)(n(f)(x))</span><br><span class="line">MUL = <span class="keyword">lambda</span> n: <span class="keyword">lambda</span> m: <span class="keyword">lambda</span> f: <span class="keyword">lambda</span> x: m(n(f))(x)</span><br><span class="line">EXP = <span class="keyword">lambda</span> n: <span class="keyword">lambda</span> m: <span class="keyword">lambda</span> f: <span class="keyword">lambda</span> x: n(m)(f)(x)</span><br><span class="line">PRED = <span class="keyword">lambda</span> n: <span class="keyword">lambda</span> f: <span class="keyword">lambda</span> x: n(<span class="keyword">lambda</span> g: <span class="keyword">lambda</span> h: h(g(f)))(<span class="keyword">lambda</span> h: x)(<span class="keyword">lambda</span> h: h)</span><br><span class="line">SUB = <span class="keyword">lambda</span> n: <span class="keyword">lambda</span> m: n(PRED)(m)</span><br><span class="line"></span><br><span class="line">TRUE = <span class="keyword">lambda</span> x: <span class="keyword">lambda</span> y: x</span><br><span class="line">FALSE = <span class="keyword">lambda</span> x: <span class="keyword">lambda</span> y: y</span><br><span class="line">AND = <span class="keyword">lambda</span> x: <span class="keyword">lambda</span> y: x(y)(x)</span><br><span class="line">OR = <span class="keyword">lambda</span> x: <span class="keyword">lambda</span> y: x(x)(y)</span><br><span class="line">NOT = <span class="keyword">lambda</span> n: <span class="keyword">lambda</span> x: <span class="keyword">lambda</span> y: n(y)(x)</span><br><span class="line">IF = <span class="keyword">lambda</span> n: <span class="keyword">lambda</span> x: <span class="keyword">lambda</span> y: n(x)(y)</span><br><span class="line"></span><br><span class="line">ALWAYS_FALSE = <span class="keyword">lambda</span> x: FALSE</span><br><span class="line">ISZERO = <span class="keyword">lambda</span> n: n(ALWAYS_FALSE)(TRUE)</span><br><span class="line"></span><br><span class="line">PAIR = <span class="keyword">lambda</span> x: <span class="keyword">lambda</span> y: <span class="keyword">lambda</span> b: b(x)(y)</span><br><span class="line">FIRST = <span class="keyword">lambda</span> p: p(TRUE)</span><br><span class="line">SECOND = <span class="keyword">lambda</span> p: p(FALSE)</span><br><span class="line"></span><br><span class="line">NULL = <span class="keyword">lambda</span> x: TRUE</span><br><span class="line">ISNULL = <span class="keyword">lambda</span> v: v(<span class="keyword">lambda</span> x: <span class="keyword">lambda</span> y: FALSE)</span><br><span class="line"></span><br><span class="line">_NEXT = <span class="keyword">lambda</span> x: PAIR(SECOND(x))(SUCC(SECOND(x)))</span><br><span class="line">_PRED = <span class="keyword">lambda</span> n: FIRST(n(_NEXT)(PAIR(ZERO)(ZERO)))</span><br><span class="line">_SUB = <span class="keyword">lambda</span> n: <span class="keyword">lambda</span> m: n(_PRED)(m)</span><br><span class="line"></span><br><span class="line">EQ = <span class="keyword">lambda</span> n: lambdam: AND(ISZERO(SUB(n)(m)))(ISZERO(SUB(m)(n)))</span><br><span class="line">YCOMB = <span class="keyword">lambda</span> f: (<span class="keyword">lambda</span> x: f(x(x)))(<span class="keyword">lambda</span> x: f(x(x)))</span><br><span class="line">ZCOMP = <span class="keyword">lambda</span> f: (<span class="keyword">lambda</span> x: (<span class="keyword">lambda</span> m: f(x(x))(m)))(<span class="keyword">lambda</span> x: (<span class="keyword">lambda</span> m: f(x(x))(m)))</span><br><span class="line"></span><br><span class="line">TONUM_F = <span class="keyword">lambda</span> n: n+<span class="number">1</span></span><br><span class="line">TONUM_X = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">to_num</span>(<span class="params">n</span>):</span><br><span class="line">	<span class="keyword">return</span> n(TONUM_F)(TONUM_X)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">church</span>(<span class="params">v: <span class="built_in">int</span></span>):</span><br><span class="line">	ret = ZERO</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(v):</span><br><span class="line">		ret = SUCC(ret)</span><br><span class="line">	<span class="keyword">return</span> ret</span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> to_num(ZERO) == <span class="number">0</span></span><br><span class="line"><span class="keyword">assert</span> to_num(church(<span class="number">13</span>)) == <span class="number">13</span></span><br><span class="line"><span class="keyword">assert</span> to_num(ADD(church(<span class="number">12</span>))(church(<span class="number">7</span>))) == <span class="number">12</span>+<span class="number">7</span></span><br><span class="line"><span class="keyword">assert</span> to_num(MUL(church(<span class="number">12</span>))(church(<span class="number">7</span>))) == <span class="number">12</span>*<span class="number">7</span></span><br><span class="line"><span class="keyword">assert</span> to_num(EXP(church(<span class="number">3</span>))(church(<span class="number">6</span>))) == <span class="number">6</span>**<span class="number">3</span></span><br><span class="line"><span class="keyword">assert</span> to_num(PRED(church(<span class="number">25</span>))) == <span class="number">24</span></span><br><span class="line"><span class="keyword">assert</span> to_num(SUB(church(<span class="number">13</span>))(church(<span class="number">25</span>))) == <span class="number">25</span>-<span class="number">13</span></span><br><span class="line"><span class="keyword">assert</span> AND(TRUE)(FALSE) == FALSE</span><br><span class="line"><span class="keyword">assert</span> AND(TRUE)(TRUE) == TRUE</span><br><span class="line"><span class="keyword">assert</span> OR(TRUE)(FALSE) == TRUE</span><br><span class="line"><span class="keyword">assert</span> OR(FALSE)(FALSE) == FALSE</span><br><span class="line"><span class="keyword">assert</span> IF(TRUE)(<span class="number">1</span>)(<span class="number">0</span>) == <span class="number">1</span></span><br><span class="line"><span class="keyword">assert</span> IF(FALSE)(<span class="number">1</span>)(<span class="number">0</span>) == <span class="number">0</span></span><br><span class="line"><span class="keyword">assert</span> ISZERO(church(<span class="number">0</span>)) == TRUE</span><br><span class="line"><span class="keyword">assert</span> ISZERO(church(<span class="number">12</span>)) == FALSE</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/" rel="tag"># 函数式编程</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/03/12/Linux%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%89%A9%E5%85%85%E7%A1%AC%E7%9B%98/" rel="prev" title="Linux虚拟机扩充硬盘">
+                  <i class="fa fa-angle-left"></i> Linux虚拟机扩充硬盘
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/05/30/%E5%A2%A8%E6%B0%B4%E5%B1%8F%E6%8A%98%E8%85%BE/" rel="next" title="墨水屏折腾">
+                  墨水屏折腾 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ihopenot</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/ihopenot" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
