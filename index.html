@@ -196,7 +196,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2023-09-24 15:03:40 / Modified: 16:25:24" itemprop="dateCreated datePublished" datetime="2023-09-24T15:03:40+08:00">2023-09-24</time>
+      <time title="Created: 2023-09-24 15:03:40 / Modified: 16:27:30" itemprop="dateCreated datePublished" datetime="2023-09-24T15:03:40+08:00">2023-09-24</time>
     </span>
 
   
@@ -213,30 +213,18 @@
 <p>后来想着一直不更新也不是个事，然后开始研究怎么更新系统同时保留magisk，这里总结一下流程和坑。</p>
 <p>TLDR：只是OnePlus的流程，别的厂商的手机过程可能略有不同。</p>
 <ol start="0">
-<li><p>如果没有解锁bootload，跳转到<code>google搜索如何解锁bootload</code></p>
-</li>
-<li><p>如果有对应系统的boot.img，通常在全量包中可以找到，跳转到3。</p>
-</li>
-<li><p>如果没有boot.img，搜索如何刷入全量包，并刷入一个网上现有的全量包，同时从全量包中提取boot.img。</p>
-</li>
-<li><p>将boot.img上传到手机内。</p>
-</li>
-<li><p>如果有magisk app，跳转到6。</p>
-</li>
-<li><p>如果没有magisk app，安装一个，安装包在<a target="_blank" rel="noopener" href="https://github.com/topjohnwu/Magisk/releases">github</a>下载。</p>
-</li>
-<li><p>使用magisk app，安装，选择并修补一个文件，选择之前上传的boot.img。</p>
-</li>
-<li><p>将magisk修补完成的文件拷贝到电脑上。</p>
-</li>
-<li><p>使用<code>adb reboot bootloader</code>进入fastboot。</p>
-</li>
-<li><p>使用<code>fastboot boot magisk_patch_xxxxx_xxxxx.img</code>进入临时的magisk环境。</p>
-</li>
-<li><p>在magisk app里，安装，直接安装，重启。</p>
-</li>
-<li><p>成功。</p>
-</li>
+<li>如果没有解锁bootloader，跳转到<code>google搜索如何解锁bootloader</code></li>
+<li>如果有对应系统的boot.img，通常在全量包中可以找到，跳转到3。</li>
+<li>如果没有boot.img，搜索如何刷入全量包，并刷入一个网上现有的全量包，同时从全量包中提取boot.img。</li>
+<li>将boot.img上传到手机内。</li>
+<li>如果有magisk app，跳转到6。</li>
+<li>如果没有magisk app，安装一个，安装包在<a target="_blank" rel="noopener" href="https://github.com/topjohnwu/Magisk/releases">github</a>下载。</li>
+<li>使用magisk app，安装，选择并修补一个文件，选择之前上传的boot.img。</li>
+<li>将magisk修补完成的文件拷贝到电脑上。</li>
+<li>使用<code>adb reboot bootloader</code>进入fastboot。</li>
+<li>使用<code>fastboot boot magisk_patch_xxxxx_xxxxx.img</code>进入临时的magisk环境。</li>
+<li>在magisk app里，安装，直接安装，重启。</li>
+<li>成功。</li>
 </ol>
 <p>下面是小故事。</p>
           <!--noindex-->
