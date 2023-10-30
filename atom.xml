@@ -6,7 +6,7 @@
   <link href="https://ihopenot.github.io/atom.xml" rel="self"/>
   
   <link href="https://ihopenot.github.io/"/>
-  <updated>2023-10-25T11:53:00.000Z</updated>
+  <updated>2023-10-30T07:46:04.000Z</updated>
   <id>https://ihopenot.github.io/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>GeekCon2023</title>
+    <link href="https://ihopenot.github.io/2023/10/30/GeekCon2023/"/>
+    <id>https://ihopenot.github.io/2023/10/30/GeekCon2023/</id>
+    <published>2023-10-30T03:22:03.000Z</published>
+    <updated>2023-10-30T07:46:04.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="序"><a href="#序" class="headerlink" title="序"></a>序</h1><p>同学告诉今年GeenCon要开了，看了下感觉东西还行，正好本科同学也要上去做presentation，就想过去玩玩，顺便聚一下。</p><p>工作日抽时间去，所以火车定的比较紧，前一天晚上才到，后一天早上就走。在去的火车上发现正好明日方舟这几天在摆一个线下展，在美罗城那边，正好可以去看看。</p><span id="more"></span><h1 id="GeekCon"><a href="#GeekCon" class="headerlink" title="GeekCon"></a>GeekCon</h1><p>据说有小礼品，早上一早就过去了，然后发现有个集章活动，去的早，摆摊的人都还没来齐。进去先在华为那薅了个万能魔方，然后四处晃。</p><p>baidu那里的展台在焊板子，但是早上一直没开，之后又一直在听会，就中场的时候去看了下。</p><p>之后陆陆续续展台都开起来，集章集完了去兑换奖品，发现就是一瓶可乐（。补给处那个大妈还是个外国人，相当友善，热情。</p><p>之后不一会会就正式开始了。</p><h2 id="DAF"><a href="#DAF" class="headerlink" title="DAF"></a>DAF</h2><p>这个环节基本就是演示，没有原理啥的，不太清楚。</p><h3 id="致命脉冲"><a href="#致命脉冲" class="headerlink" title="致命脉冲"></a>致命脉冲</h3><p>通过DNS反射放大做DoS，说是不依赖DNS的具体实现，有点好奇，总不能是DNS协议的问题吧？据说可以放大万倍。</p><h3 id="无限手套"><a href="#无限手套" class="headerlink" title="无限手套"></a>无限手套</h3><p>这个还有点意思，这个是之前blackhat的会上讲过的，主要是因为手机指纹解锁的逻辑漏洞导致的。大前提是指纹的抗碰撞性并不好，大概10000人就会有一个人能打开你的手机。然后为了鲁棒性，手机一次指纹解锁会采集多次指纹，只要有一次匹配就能打开。最后最关键的是，正常手机指纹解锁多次会累计一个失败计数器，达到阈值之后会把指纹解锁锁定，但是指纹解锁有个Error状态，只要这次指纹触发了Error，就不会累计失败计数器，所以可以通过多个指纹+Error注入+侧信道来爆破指纹，解锁。</p><h3 id="日车"><a href="#日车" class="headerlink" title="日车"></a>日车</h3><p>日车的有好几个，感觉都差不多就放一块了。看起来很nb，但是反正就是过去，把车门开了。还有一个可以把车直接开走。但是本身啥也没说，就演示一下，感觉没啥意思。把车开走那个前几次出了点问题，看起来像是通过抓wifi信号获取什么密钥然后把车日了的。</p><h3 id="消逝的声波"><a href="#消逝的声波" class="headerlink" title="消逝的声波"></a>消逝的声波</h3><p>没啥意思，就是一个超声波的静默装置，干扰录音用的。定向的，而且效果也不是很好，感觉。</p><h3 id="穿越"><a href="#穿越" class="headerlink" title="穿越"></a>穿越</h3><p>虚拟机逃逸，一个HyperV的穿出去任意代码执行，一个mac上的PD，好像是，穿出去任意文件读写。</p><h2 id="15-5"><a href="#15-5" class="headerlink" title="15+5"></a>15+5</h2><h3 id="URB之剑"><a href="#URB之剑" class="headerlink" title="URB之剑"></a>URB之剑</h3><p>VMware Fusion逃逸，主要是ehci的实现漏洞。主要是urb的处理不当，然后提供了一些位于urb部分和svga的一些原语。</p><img data-src='/2023/10/30/GeekCon2023//IMG20231024111546.jpg'  alt="IMG20231024111546" style="zoom:10%;" /><h3 id="曝光7年的攻击手段再现"><a href="#曝光7年的攻击手段再现" class="headerlink" title="曝光7年的攻击手段再现"></a>曝光7年的攻击手段再现</h3><p>解bitlocker，只能解系统盘的bitlocker，原理是因为系统盘的bitlocker加密只与硬件状态相关，和用户密码无关，因为系统加载的时候不需要用户输入密码。</p><img data-src='/2023/10/30/GeekCon2023//IMG20231024155534.jpg'  alt="IMG20231024155534" style="zoom:10%;" /><p>所以理论上肯定可以解，但是由于硬件security boot的保护进不去系统。试图DMA直接写内核来绕过登录，但是内核开了DMA写保护，无法直接修改。然后通过在boot的时候用DMA修改UEFI来关闭内核DMA写保护来日内核，然后绕过登录，进去就能看到解密之后的硬盘了。</p><img data-src='/2023/10/30/GeekCon2023//IMG20231024160000.jpg'  alt="IMG20231024160000" style="zoom:10%;" /><img data-src='/2023/10/30/GeekCon2023//IMG20231024160135.jpg'  alt="IMG20231024160135" style="zoom:10%;" /><h3 id="Pwn-Everything-with-Electron"><a href="#Pwn-Everything-with-Electron" class="headerlink" title="Pwn Everything with Electron"></a>Pwn Everything with Electron</h3><p>这个当时主讲没了，所以换成了另外的Android和IOS的一些漫谈。</p><h3 id="Attacking-the-Pixel-Modem-Over-The-Air"><a href="#Attacking-the-Pixel-Modem-Over-The-Air" class="headerlink" title="Attacking the Pixel Modem Over The Air"></a>Attacking the Pixel Modem Over The Air</h3><p>远程打基带，通过fuzz找三星基带的洞日的。</p><h3 id="办公文档中的隐藏威胁"><a href="#办公文档中的隐藏威胁" class="headerlink" title="办公文档中的隐藏威胁"></a>办公文档中的隐藏威胁</h3><p>主要是docx加载object的问题。</p><img data-src='/2023/10/30/GeekCon2023//IMG20231024170917.jpg'  alt="IMG20231024170917" style="zoom:10%;" /><p>使用不常用的格式和软件可能更容易exploit。</p><img data-src='/2023/10/30/GeekCon2023//IMG20231024171610.jpg'  alt="IMG20231024171610" style="zoom:10%;" /><img data-src='/2023/10/30/GeekCon2023//IMG20231024171648.jpg'  alt="IMG20231024171648" style="zoom:10%;" /><h2 id="披露"><a href="#披露" class="headerlink" title="披露"></a>披露</h2><p>披露基本都是手机相关的，主要都是SDK干坏事，一个是互相唤醒，一个是利用广告获利，还有一个是手机本机号码一键登录的漏洞。</p><p>大概就是一个是恶意sdk，然后厂商可以通过给sdk交保护费的方式让sdk去唤醒自家的app，这就是为啥明明后台没有起相应的app，却一直在给你推送消息的原因。</p><p>然后另一个是一键登录实现的有问题，让恶意app能利用你的手机一键登录别的app，然后做些坏事。</p><p>还有一个环节是GPT，这个感觉有点意思，上面一共展示了3种GPT的用法，一个是日志分析，用来捕获网上的攻击流量。第二个是代码漏洞检测和修复建议。最后一个是通过GPT来生成harness辅助Fuzz。都是利用到了GPT处理语义化的信息，感觉这个算是GPT的一个主要方向，其实GPT现在体现出来的语言理解能力，它可以处理很多类型的问题，很多东西其实可以抽象成一种语言，比如汇编，比如代码，只不过相对汇编，代码，自然语言一个比一个更重逻辑。</p>]]></content>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;序&quot;&gt;&lt;a href=&quot;#序&quot; class=&quot;headerlink&quot; title=&quot;序&quot;&gt;&lt;/a&gt;序&lt;/h1&gt;&lt;p&gt;同学告诉今年GeenCon要开了，看了下感觉东西还行，正好本科同学也要上去做presentation，就想过去玩玩，顺便聚一下。&lt;/p&gt;
+&lt;p&gt;工作日抽时间去，所以火车定的比较紧，前一天晚上才到，后一天早上就走。在去的火车上发现正好明日方舟这几天在摆一个线下展，在美罗城那边，正好可以去看看。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="日常" scheme="https://ihopenot.github.io/tags/%E6%97%A5%E5%B8%B8/"/>
+    
+  </entry>
   
   <entry>
     <title>赴日游记(三)</title>
