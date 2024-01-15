@@ -88,7 +88,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">8</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">19</span></a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">9</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">21</span></a></li>
   </ul>
 </nav>
 
@@ -127,13 +127,13 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -166,6 +166,182 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://ihopenot.github.io/2023/03/12/Linux%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%89%A9%E5%85%85%E7%A1%AC%E7%9B%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ihopenot">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ihopenot">
+      <meta itemprop="description" content="is the random motion of particles suspended in a medium">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Ihopenot">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/03/12/Linux%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%89%A9%E5%85%85%E7%A1%AC%E7%9B%98/" class="post-title-link" itemprop="url">Linux虚拟机扩充硬盘</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-03-12 21:24:54" itemprop="dateCreated datePublished" datetime="2023-03-12T21:24:54+08:00">2023-03-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-08-24 22:35:48" itemprop="dateModified" datetime="2023-08-24T22:35:48+08:00">2023-08-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>由于虚拟机硬盘经常被干满，就需要经常去加盘，每次加盘都要上网搜一下fdisk怎么用，很麻烦，因此，在这篇博客中我将总结一下这个过程，以便以后可以直接查阅。</p>
+<h1 id="虚拟机硬盘扩充（fdisk）"><a href="#虚拟机硬盘扩充（fdisk）" class="headerlink" title="虚拟机硬盘扩充（fdisk）"></a>虚拟机硬盘扩充（fdisk）</h1><p>当虚拟机硬盘空间不足时，我们该如何处理？通常有两种选择：添加一块新硬盘或者增大原有硬盘的容量。</p>
+<p>对于不使用LVM（逻辑卷管理）的情况，添加新硬盘并不容易直接扩展原始分区的容量。这对于像我这样将整个硬盘挂载在根目录（&#x2F;）下的用户来说并不友好。</p>
+<p>因此，通常我们会选择增大原有硬盘的容量。这样一来，fdisk就可以识别到硬盘容量的增加。但是，由于分区表尚未修改，实际可用空间并不会有所变化。</p>
+<p>接下来，我们将通过fdisk来扩大分区容量。</p>
+<p><strong>数据无价，谨慎操作，如有重要信息，务必提前备份。</strong></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/03/12/Linux%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%89%A9%E5%85%85%E7%A1%AC%E7%9B%98/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://ihopenot.github.io/2022/11/30/MMD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ihopenot">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ihopenot">
+      <meta itemprop="description" content="is the random motion of particles suspended in a medium">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Ihopenot">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/11/30/MMD/" class="post-title-link" itemprop="url">MMD</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-11-30 20:42:25" itemprop="dateCreated datePublished" datetime="2022-11-30T20:42:25+08:00">2022-11-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-08-24 22:56:56" itemprop="dateModified" datetime="2023-08-24T22:56:56+08:00">2023-08-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="MMD"><a href="#MMD" class="headerlink" title="MMD"></a>MMD</h1><p>全称mikumiku dance（mmd），让miku跳舞的软件。mmd这个软件挺老的，最新的9.32也是三年前的版本了，mmd本身上手难度低，相对于其他的一些专业3d工具c4d, blender甚至ue5来说下限高，初心者10分钟可能就能做出来能看的mmd了。并且有mme（mikumiku effects）的加持，上限也不低。</p>
+<p>这几天稍微玩了下mmd，这里记录下流程和一些踩的坑。</p>
+<h2 id="MMD-1"><a href="#MMD-1" class="headerlink" title="MMD"></a>MMD</h2><p>mmd作为入门级的mmd制作工具，功能挺全的，一般流程是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">下载人物模型，动作，镜头动作并添加</span><br><span class="line">修改人物动作，镜头动作适配模型大小</span><br><span class="line">下载场景模型并添加</span><br><span class="line">修改人物/镜头的动作/位置适配场景</span><br><span class="line">添加mme，完善细节</span><br></pre></td></tr></table></figure>
+
+<p>上面并没有明显顺序关系，想按什么顺序来都行。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/11/30/MMD/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -887,96 +1063,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://ihopenot.github.io/2021/04/17/tgstc-2021-PC-%E5%88%9D%E8%B5%9B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="Ihopenot">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ihopenot">
-      <meta itemprop="description" content="is the random motion of particles suspended in a medium">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Ihopenot">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/04/17/tgstc-2021-PC-%E5%88%9D%E8%B5%9B/" class="post-title-link" itemprop="url">tgstc-2021-PC-初赛</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-04-17 18:09:50" itemprop="dateCreated datePublished" datetime="2021-04-17T18:09:50+08:00">2021-04-17</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2023-08-24 22:58:36" itemprop="dateModified" datetime="2023-08-24T22:58:36+08:00">2023-08-24</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>​	18年的原题。。。</p>
-<img src="/2021/04/17/tgstc-2021-PC-%E5%88%9D%E8%B5%9B/image-20210417181255897.png" class="" title="image-20210417181255897">
-
-<p>​	题目本身就是opengl的例程改的，基本函数都能对的上。</p>
-<p>​	推测是在箭头指向的地方能看到flag，但是视角限制传不过去。</p>
-<p>​	发现视角限制是在mousecallback中实现的，去掉即可。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/04/17/tgstc-2021-PC-%E5%88%9D%E8%B5%9B/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" title="Previous page" aria-label="Previous page" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" title="Next page" aria-label="Next page" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
@@ -987,7 +1075,7 @@
 
   <div class="copyright">
     &copy; 
-    <span itemprop="copyrightYear">2023</span>
+    <span itemprop="copyrightYear">2024</span>
     <span class="with-love">
       <i class="fa fa-heart"></i>
     </span>
